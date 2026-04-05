@@ -1,1018 +1,1699 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>단어장 · Vocabook</title>
-<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Space+Grotesk:wght@400;500;600;700&family=DM+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg: #f7f3ec;
-    --surface: #fffef9;
-    --surface2: #f0ebe0;
-    --border: #ddd5c4;
-    --text: #2c2416;
-    --text2: #7a6e5f;
-    --accent: #c8521a;
-    --accent-soft: #faeade;
-    --green: #2d7a4f;
-    --green-soft: #d9f0e5;
-    --red: #b53232;
-    --red-soft: #fde8e8;
-    --yellow: #c9870b;
-    --yellow-soft: #fef3dc;
-    --shadow: 0 2px 12px rgba(44,36,22,0.08);
-    --shadow-md: 0 4px 24px rgba(44,36,22,0.12);
-    --radius: 14px;
-    --radius-sm: 8px;
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>WordMaster 📚</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #080c14;
+      --surface: #111827;
+      --surface2: #1c2433;
+      --surface3: #243047;
+      --border: #2a3650;
+      --border-bright: #3d5280;
+      --text: #e2e8f6;
+      --text-dim: #7a93b8;
+      --text-muted: #4a6080;
+      --accent: #6c8fff;
+      --accent2: #a78bfa;
+      --accent-glow: rgba(108,143,255,0.2);
+      --success: #34d399;
+      --success-bg: rgba(52,211,153,0.12);
+      --error: #f87171;
+      --error-bg: rgba(248,113,113,0.12);
+      --warning: #fbbf24;
+      --warning-bg: rgba(251,191,36,0.12);
+      --radius: 18px;
+      --radius-sm: 12px;
+      --radius-xs: 8px;
+      --font: 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+      --mono: 'Courier New', 'Consolas', monospace;
+      --nav-h: 68px;
+    }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after {
+      margin: 0; padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-font-smoothing: antialiased;
+    }
 
-  body {
-    font-family: 'Gowun Dodum', serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    background-image:
-      radial-gradient(circle at 20% 50%, rgba(200,82,26,0.04) 0%, transparent 50%),
-      radial-gradient(circle at 80% 20%, rgba(200,135,11,0.05) 0%, transparent 50%);
-  }
+    html {
+      height: 100%;
+      height: 100dvh;
+      overflow: hidden;
+    }
 
-  /* ── HEADER ── */
-  header {
-    background: var(--surface);
-    border-bottom: 1.5px solid var(--border);
-    padding: 0 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 58px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 1px 8px rgba(44,36,22,0.06);
-  }
+    body {
+      height: 100%;
+      height: 100dvh;
+      overflow: hidden;
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 16px;
+    }
 
-  .logo {
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 700;
-    font-size: 1.1rem;
-    letter-spacing: -0.02em;
-    color: var(--accent);
-    display: flex;
-    align-items: center;
-    gap: 7px;
-  }
-  .logo-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; }
+    /* ── App Shell ── */
+    #app {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      height: 100dvh;
+      max-width: 520px;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+    }
 
-  .word-count-badge {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 0.75rem;
-    font-weight: 600;
-    background: var(--accent-soft);
-    color: var(--accent);
-    border-radius: 20px;
-    padding: 3px 10px;
-  }
+    /* ── Main Shell (manage / test-setup / results / settings) ── */
+    #main-shell {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      overflow: hidden;
+    }
 
-  /* ── MAIN WRAPPER ── */
-  .wrapper {
-    max-width: 520px;
-    margin: 0 auto;
-    padding: 20px 16px 80px;
-  }
+    /* ── App Header ── */
+    .app-header {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px 14px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+    }
 
-  /* ── SECTIONS ── */
-  .section-card {
-    background: var(--surface);
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px;
-    margin-bottom: 16px;
-    box-shadow: var(--shadow);
-  }
+    .app-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-  .section-title {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--text2);
-    margin-bottom: 14px;
-  }
+    .app-logo-icon {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+    }
 
-  /* ── INPUT AREA ── */
-  .input-row {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 10px;
-  }
+    .app-title {
+      font-size: 20px;
+      font-weight: 900;
+      background: linear-gradient(120deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.5px;
+    }
 
-  input[type="text"] {
-    flex: 1;
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 10px 13px;
-    font-family: 'Gowun Dodum', serif;
-    font-size: 0.95rem;
-    background: var(--bg);
-    color: var(--text);
-    outline: none;
-    transition: border-color 0.15s, box-shadow 0.15s;
-  }
-  input[type="text"]:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(200,82,26,0.1);
-  }
-  input[type="text"]::placeholder { color: #bbb0a0; }
+    .word-count-badge {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-dim);
+    }
 
-  #english-input {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.95rem;
-  }
+    /* ── Scroll Content ── */
+    .scroll-content {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      padding: 16px 16px calc(var(--nav-h) + 16px);
+    }
 
-  .btn {
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 600;
-    font-size: 0.82rem;
-    padding: 10px 14px;
-    border: none;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    transition: all 0.15s;
-    white-space: nowrap;
-    letter-spacing: 0.01em;
-  }
-  .btn:active { transform: scale(0.97); }
+    /* ── Views ── */
+    .view { display: none; }
+    .view.active { display: block; }
 
-  .btn-primary {
-    background: var(--accent);
-    color: #fff;
-  }
-  .btn-primary:hover { background: #b04315; }
+    /* ── Bottom Nav ── */
+    .bottom-nav {
+      flex-shrink: 0;
+      display: flex;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      height: var(--nav-h);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
 
-  .btn-secondary {
-    background: var(--surface2);
-    color: var(--text);
-    border: 1.5px solid var(--border);
-  }
-  .btn-secondary:hover { background: var(--border); }
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: color 0.2s;
+      padding: 8px 4px;
+      position: relative;
+    }
 
-  .btn-ghost {
-    background: transparent;
-    color: var(--text2);
-    padding: 6px 10px;
-    font-size: 0.78rem;
-  }
-  .btn-ghost:hover { color: var(--red); }
+    .nav-item.active { color: var(--accent); }
 
-  .btn-green {
-    background: var(--green);
-    color: #fff;
-  }
-  .btn-green:hover { background: #246040; }
+    .nav-item.active::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 20%; right: 20%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius: 0 0 4px 4px;
+    }
 
-  .translate-status {
-    font-size: 0.78rem;
-    color: var(--text2);
-    min-height: 18px;
-    padding: 2px 0;
-    font-family: 'Space Grotesk', sans-serif;
-  }
-  .translate-status.loading { color: var(--yellow); }
-  .translate-status.error { color: var(--red); }
+    .nav-icon { font-size: 22px; line-height: 1; }
+    .nav-label { font-size: 11px; font-weight: 600; }
 
-  /* ── WORD LIST ── */
-  .word-list { display: flex; flex-direction: column; gap: 8px; }
+    /* ── Test Shell (full screen) ── */
+    #test-shell {
+      display: none;
+      flex-direction: column;
+      flex: 1;
+      overflow: hidden;
+      background: var(--bg);
+    }
 
-  .word-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: var(--bg);
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 10px 12px;
-    transition: all 0.15s;
-    animation: slideIn 0.2s ease-out;
-  }
+    #test-shell.active { display: flex; }
 
-  @keyframes slideIn {
-    from { opacity: 0; transform: translateY(-6px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+    .test-topbar {
+      flex-shrink: 0;
+      padding: 14px 18px 12px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
 
-  .word-item:hover { border-color: #c8b9a5; }
+    .test-topbar-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
 
-  .word-score-badge {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 0.7rem;
-    font-weight: 700;
-    min-width: 26px;
-    height: 22px;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-  .score-0 { background: var(--surface2); color: var(--text2); }
-  .score-low { background: var(--yellow-soft); color: var(--yellow); }
-  .score-mid { background: #ffe0cc; color: #c85a1a; }
-  .score-high { background: var(--red-soft); color: var(--red); }
+    .test-mode-pill {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent);
+    }
 
-  .word-eng {
-    font-family: 'DM Mono', monospace;
-    font-weight: 500;
-    font-size: 0.9rem;
-    color: var(--text);
-    min-width: 90px;
-  }
+    .test-progress-text {
+      font-size: 13px;
+      color: var(--text-dim);
+      font-weight: 600;
+    }
 
-  .word-sep {
-    color: var(--border);
-    font-size: 0.85rem;
-  }
+    .test-progress-bar {
+      height: 5px;
+      background: var(--surface3);
+      border-radius: 3px;
+      overflow: hidden;
+    }
 
-  .word-kor {
-    font-size: 0.88rem;
-    color: var(--text2);
-    flex: 1;
-  }
+    .test-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius: 3px;
+      transition: width 0.4s cubic-bezier(.4,0,.2,1);
+    }
 
-  .empty-state {
-    text-align: center;
-    color: var(--text2);
-    font-size: 0.88rem;
-    padding: 24px 0;
-    font-family: 'Space Grotesk', sans-serif;
-  }
-  .empty-state span { display: block; font-size: 1.8rem; margin-bottom: 8px; }
+    .test-body {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 24px 18px 16px;
+    }
 
-  /* ── START TEST BTN ── */
-  .test-start-wrap {
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    padding: 14px 16px;
-    background: linear-gradient(transparent, var(--bg) 40%);
-    display: flex;
-    justify-content: center;
-  }
+    .test-q-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
 
-  .btn-start {
-    width: 100%;
-    max-width: 520px;
-    padding: 14px;
-    font-size: 0.95rem;
-    border-radius: var(--radius);
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-  }
+    .test-meaning-big {
+      font-size: 30px;
+      font-weight: 900;
+      line-height: 1.3;
+      color: var(--text);
+      margin-bottom: 20px;
+      word-break: keep-all;
+    }
 
-  /* ── TEST SCREEN ── */
-  #test-screen {
-    display: none;
-    flex-direction: column;
-    min-height: 100vh;
-    background: var(--bg);
-    background-image:
-      radial-gradient(circle at 10% 80%, rgba(200,82,26,0.05) 0%, transparent 45%),
-      radial-gradient(circle at 90% 10%, rgba(45,122,79,0.04) 0%, transparent 45%);
-  }
+    .test-word-big {
+      font-size: 44px;
+      font-weight: 900;
+      font-family: var(--mono);
+      color: var(--accent);
+      margin-bottom: 8px;
+      letter-spacing: -1px;
+      word-break: break-all;
+    }
 
-  .test-header {
-    background: var(--surface);
-    border-bottom: 1.5px solid var(--border);
-    padding: 0 20px;
-    height: 58px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    box-shadow: 0 1px 8px rgba(44,36,22,0.06);
-  }
+    .test-hint-text {
+      font-size: 14px;
+      color: var(--text-dim);
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
 
-  .test-progress-text {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--text2);
-  }
+    .test-example-box {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      font-size: 17px;
+      line-height: 1.7;
+      color: var(--text-dim);
+      word-break: break-word;
+    }
 
-  .progress-bar-wrap {
-    height: 3px;
-    background: var(--surface2);
-    position: relative;
-    overflow: hidden;
-  }
-  .progress-bar-fill {
-    height: 100%;
-    background: var(--accent);
-    transition: width 0.4s ease;
-    border-radius: 0 2px 2px 0;
-  }
+    .test-example-box strong {
+      color: var(--accent);
+      font-style: italic;
+    }
 
-  .test-body {
-    max-width: 520px;
-    margin: 0 auto;
-    padding: 32px 20px 40px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
+    .test-footer {
+      flex-shrink: 0;
+      padding: 12px 16px;
+      padding-bottom: max(12px, env(safe-area-inset-bottom, 12px));
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+    }
 
-  .test-label {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 0.7rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text2);
-    text-align: center;
-  }
+    .feedback-box {
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      margin-bottom: 10px;
+      animation: feedIn .2s ease;
+      display: none;
+    }
 
-  .clue-card {
-    background: var(--surface);
-    border: 2px solid var(--border);
-    border-radius: 20px;
-    padding: 36px 28px;
-    text-align: center;
-    box-shadow: var(--shadow-md);
-    position: relative;
-    overflow: hidden;
-  }
-  .clue-card::before {
-    content: '';
-    position: absolute;
-    top: -30px; right: -30px;
-    width: 100px; height: 100px;
-    background: radial-gradient(circle, rgba(200,82,26,0.07) 0%, transparent 70%);
-    border-radius: 50%;
-  }
+    .feedback-box.show { display: block; }
 
-  .clue-text {
-    font-size: 2rem;
-    font-weight: 400;
-    line-height: 1.4;
-    color: var(--text);
-    word-break: keep-all;
-  }
+    @keyframes feedIn {
+      from { opacity:0; transform: translateY(8px); }
+      to   { opacity:1; transform: translateY(0); }
+    }
 
-  .answer-area { display: flex; flex-direction: column; gap: 10px; }
+    .feedback-box.correct  { background: var(--success-bg); border: 1px solid var(--success); }
+    .feedback-box.wrong    { background: var(--error-bg);   border: 1px solid var(--error);   }
+    .feedback-box.partial  { background: var(--warning-bg); border: 1px solid var(--warning);  }
 
-  #answer-input {
-    width: 100%;
-    text-align: center;
-    font-family: 'DM Mono', monospace;
-    font-size: 1.15rem;
-    padding: 14px;
-    border-radius: var(--radius);
-    border: 2px solid var(--border);
-    background: var(--surface);
-    letter-spacing: 0.06em;
-  }
-  #answer-input:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 4px rgba(200,82,26,0.1);
-  }
+    .feedback-title {
+      font-size: 15px;
+      font-weight: 800;
+      margin-bottom: 3px;
+    }
 
-  .btn-confirm {
-    width: 100%;
-    padding: 14px;
-    font-size: 0.95rem;
-    border-radius: var(--radius);
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-  }
+    .feedback-box.correct  .feedback-title { color: var(--success); }
+    .feedback-box.wrong    .feedback-title { color: var(--error);   }
+    .feedback-box.partial  .feedback-title { color: var(--warning);  }
 
-  /* ── FEEDBACK ── */
-  .feedback-overlay {
-    position: fixed;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 200;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.2s;
-  }
-  .feedback-overlay.show { opacity: 1; }
+    .feedback-answer {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+    }
 
-  .feedback-pill {
-    padding: 12px 28px;
-    border-radius: 40px;
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 700;
-    font-size: 1.05rem;
-    box-shadow: var(--shadow-md);
-    transform: translateY(0);
-    animation: pillPop 0.25s ease-out;
-  }
-  @keyframes pillPop {
-    from { transform: scale(0.85) translateY(10px); }
-    to { transform: scale(1) translateY(0); }
-  }
-  .feedback-correct { background: var(--green); color: #fff; }
-  .feedback-wrong { background: var(--red); color: #fff; }
+    .test-input {
+      width: 100%;
+      background: var(--surface2);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 15px 16px;
+      font-size: 18px;
+      color: var(--text);
+      outline: none;
+      font-family: var(--font);
+      min-height: 54px;
+      margin-bottom: 10px;
+      transition: border-color .2s, background .2s;
+    }
 
-  .wrong-answer-reveal {
-    text-align: center;
-    padding: 14px 20px;
-    background: var(--red-soft);
-    border: 1.5px solid #f4bcbc;
-    border-radius: var(--radius);
-    animation: slideIn 0.2s ease-out;
-  }
-  .wrong-answer-reveal .label {
-    font-size: 0.72rem;
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    color: var(--red);
-    text-transform: uppercase;
-    margin-bottom: 4px;
-  }
-  .wrong-answer-reveal .answer {
-    font-family: 'DM Mono', monospace;
-    font-size: 1.3rem;
-    font-weight: 500;
-    color: var(--red);
-  }
+    .test-input:focus { border-color: var(--accent); background: var(--surface3); }
+    .test-input.state-correct { border-color: var(--success) !important; background: var(--success-bg) !important; color: var(--success); }
+    .test-input.state-wrong   { border-color: var(--error)   !important; background: var(--error-bg)   !important; color: var(--error);   }
+    .test-input.state-partial { border-color: var(--warning)  !important; background: var(--warning-bg)  !important; color: var(--warning);  }
 
-  /* ── RESULT SCREEN ── */
-  #result-screen {
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    background: var(--bg);
-    padding: 40px 20px;
-    text-align: center;
-    gap: 20px;
-  }
+    .test-input:disabled { opacity: 0.8; }
 
-  .result-icon { font-size: 3.5rem; }
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 15px 20px;
+      border-radius: var(--radius-sm);
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      outline: none;
+      transition: opacity .15s, transform .12s;
+      min-height: 52px;
+      font-family: var(--font);
+      width: 100%;
+      letter-spacing: -0.2px;
+    }
 
-  .result-title {
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 700;
-    font-size: 1.6rem;
-    color: var(--text);
-  }
+    .btn:active { transform: scale(0.97); opacity: .88; }
+    .btn:disabled { opacity: .45; pointer-events: none; }
 
-  .result-score-ring {
-    width: 140px;
-    height: 140px;
-    border-radius: 50%;
-    background: conic-gradient(var(--accent) 0%, var(--accent) var(--pct, 0%), var(--surface2) var(--pct, 0%));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    box-shadow: var(--shadow-md);
-  }
-  .result-score-inner {
-    width: 108px;
-    height: 108px;
-    background: var(--surface);
-    border-radius: 50%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  .result-pct {
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 700;
-    font-size: 2rem;
-    color: var(--text);
-    line-height: 1;
-  }
-  .result-pct-label {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 0.7rem;
-    color: var(--text2);
-    margin-top: 2px;
-  }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(108,143,255,.25);
+    }
 
-  .result-stats {
-    display: flex;
-    gap: 12px;
-  }
-  .result-stat {
-    background: var(--surface);
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 12px 20px;
-    font-family: 'Space Grotesk', sans-serif;
-  }
-  .result-stat .num {
-    font-size: 1.4rem;
-    font-weight: 700;
-    display: block;
-  }
-  .result-stat .lbl {
-    font-size: 0.72rem;
-    color: var(--text2);
-    letter-spacing: 0.04em;
-  }
-  .stat-correct .num { color: var(--green); }
-  .stat-wrong .num { color: var(--red); }
+    .btn-secondary {
+      background: var(--surface2);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
 
-  .result-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    width: 100%;
-    max-width: 300px;
-  }
+    .btn-success {
+      background: linear-gradient(135deg, #059669, var(--success));
+      color: #fff;
+    }
 
-  /* ── SCREEN VISIBILITY ── */
-  #main-screen { display: block; }
-  .screen-flex { display: flex; }
+    .btn-danger {
+      background: linear-gradient(135deg, #dc2626, var(--error));
+      color: #fff;
+    }
 
-  /* Scrollbar */
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-</style>
+    .btn-warning {
+      background: linear-gradient(135deg, #d97706, var(--warning));
+      color: #000;
+      font-weight: 800;
+    }
+
+    .btn-sm {
+      padding: 8px 14px;
+      font-size: 14px;
+      min-height: 38px;
+      width: auto;
+    }
+
+    .btn-row { display: flex; gap: 10px; }
+    .btn-row .btn { flex: 1; }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      margin-bottom: 14px;
+    }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-dim);
+      margin-bottom: 14px;
+    }
+
+    /* ── Form elements ── */
+    .field { margin-bottom: 14px; }
+    .field:last-child { margin-bottom: 0; }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-dim);
+      margin-bottom: 7px;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    textarea {
+      width: 100%;
+      background: var(--surface2);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-xs);
+      padding: 14px 16px;
+      font-size: 16px;
+      color: var(--text);
+      outline: none;
+      font-family: var(--font);
+      min-height: 50px;
+      transition: border-color .2s;
+      -webkit-appearance: none;
+    }
+
+    input[type="text"]:focus,
+    input[type="password"]:focus,
+    textarea:focus {
+      border-color: var(--accent);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+      line-height: 1.55;
+    }
+
+    .input-with-btn {
+      display: flex;
+      gap: 10px;
+    }
+
+    .input-with-btn input { flex: 1; }
+
+    /* ── Word List ── */
+    .word-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      margin-bottom: 8px;
+      transition: border-color .2s;
+    }
+
+    .word-item:hover { border-color: var(--border-bright); }
+
+    .word-item-body { flex: 1; min-width: 0; }
+
+    .wi-word {
+      font-size: 20px;
+      font-weight: 800;
+      font-family: var(--mono);
+      color: var(--accent);
+      margin-bottom: 2px;
+    }
+
+    .wi-meaning {
+      font-size: 14px;
+      color: var(--text-dim);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .wi-example {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .score-badge {
+      flex-shrink: 0;
+      background: var(--warning-bg);
+      border: 1px solid var(--warning);
+      border-radius: 20px;
+      padding: 4px 10px;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--warning);
+    }
+
+    /* ── Mode Cards ── */
+    .mode-card {
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px 20px;
+      margin-bottom: 14px;
+      cursor: pointer;
+      transition: border-color .2s, background .2s, transform .1s;
+    }
+
+    .mode-card:active { transform: scale(0.98); }
+
+    .mode-card.selected {
+      border-color: var(--accent);
+      background: linear-gradient(135deg, rgba(108,143,255,.08), rgba(167,139,250,.06));
+    }
+
+    .mode-card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .mode-card-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .mode-a .mode-card-icon { background: rgba(108,143,255,.18); }
+    .mode-b .mode-card-icon { background: rgba(167,139,250,.18); }
+
+    .mode-card-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .mode-card-desc {
+      font-size: 14px;
+      color: var(--text-dim);
+      line-height: 1.55;
+    }
+
+    .selected-indicator {
+      display: none;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      align-items: center; justify-content: center;
+      font-size: 13px;
+      color: white;
+      margin-left: auto;
+      flex-shrink: 0;
+    }
+
+    .mode-card.selected .selected-indicator { display: flex; }
+
+    /* ── Results ── */
+    .results-hero {
+      text-align: center;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px 20px 28px;
+      margin-bottom: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .results-hero::before {
+      content: '';
+      position: absolute;
+      top: -40px; left: -40px; right: -40px; bottom: -40px;
+      background: radial-gradient(ellipse at 50% 0%, rgba(108,143,255,.12), transparent 70%);
+      pointer-events: none;
+    }
+
+    .results-percent {
+      font-size: 80px;
+      font-weight: 900;
+      line-height: 1;
+      background: linear-gradient(120deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 6px;
+    }
+
+    .results-sub {
+      font-size: 16px;
+      color: var(--text-dim);
+      margin-bottom: 24px;
+      font-weight: 600;
+    }
+
+    .results-stats {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+    }
+
+    .results-stat-item { text-align: center; }
+
+    .results-stat-num {
+      font-size: 32px;
+      font-weight: 900;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .results-stat-label { font-size: 13px; color: var(--text-dim); font-weight: 600; }
+
+    .section-label {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    /* ── Settings ── */
+    .settings-group {
+      margin-bottom: 24px;
+    }
+
+    .settings-group-title {
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      padding: 0 4px;
+    }
+
+    .api-key-wrap { position: relative; }
+
+    .api-eye-btn {
+      position: absolute;
+      right: 12px; top: 50%;
+      transform: translateY(-50%);
+      background: none; border: none;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 18px;
+      padding: 6px;
+      line-height: 1;
+    }
+
+    .api-key-wrap input { padding-right: 48px; }
+
+    .info-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+
+    .info-row:last-child { border-bottom: none; }
+    .info-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+    /* ── Spinner ── */
+    .spinner {
+      display: inline-block;
+      width: 18px; height: 18px;
+      border: 2px solid rgba(255,255,255,.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin .6s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Toast ── */
+    #toast {
+      position: fixed;
+      top: 20px; left: 50%;
+      transform: translateX(-50%) translateY(calc(-100% - 20px));
+      background: var(--surface2);
+      border: 1px solid var(--border-bright);
+      border-radius: 50px;
+      padding: 12px 22px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      z-index: 9999;
+      transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+      max-width: 88vw;
+      text-align: center;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    #toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ── Empty State ── */
+    .empty-state {
+      text-align: center;
+      padding: 48px 20px;
+    }
+
+    .empty-icon { font-size: 52px; margin-bottom: 14px; }
+    .empty-title { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+    .empty-desc { font-size: 14px; color: var(--text-dim); line-height: 1.55; }
+
+    /* ── Warning box ── */
+    .warn-box {
+      background: var(--error-bg);
+      border: 1px solid var(--error);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      font-size: 14px;
+      color: var(--error);
+      text-align: center;
+      margin-bottom: 14px;
+      display: none;
+    }
+
+    /* ── Divider ── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 16px 0;
+    }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    /* ── Section header ── */
+    .list-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      padding: 0 2px;
+    }
+
+    .list-header-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text-dim);
+    }
+
+    .list-count {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* ── Page title ── */
+    .page-title {
+      font-size: 26px;
+      font-weight: 900;
+      color: var(--text);
+      margin-bottom: 6px;
+      letter-spacing: -0.5px;
+    }
+
+    .page-desc {
+      font-size: 14px;
+      color: var(--text-dim);
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    /* ── Score display in results wrong list ── */
+    .wrong-word-item {
+      background: var(--surface);
+      border: 1px solid var(--error);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      margin-bottom: 8px;
+    }
+
+    .wwi-word {
+      font-size: 20px;
+      font-weight: 800;
+      font-family: var(--mono);
+      color: var(--error);
+      margin-bottom: 2px;
+    }
+
+    .wwi-meaning { font-size: 14px; color: var(--text-dim); margin-bottom: 4px; }
+    .wwi-example { font-size: 13px; color: var(--text-muted); line-height: 1.45; }
+
+    /* ── Link ── */
+    a { color: var(--accent); }
+  </style>
 </head>
 <body>
+<div id="app">
 
-<!-- ═══════════════════════════════════════ MAIN SCREEN ═══ -->
-<div id="main-screen">
-  <header>
-    <div class="logo">
-      <div class="logo-dot"></div>
-      Vocabook
-    </div>
-    <div id="word-count-badge" class="word-count-badge">0 단어</div>
-  </header>
+  <!-- ════════════════════════════════════════════
+       MAIN SHELL  (manage / test-setup / results / settings)
+       ════════════════════════════════════════════ -->
+  <div id="main-shell">
 
-  <div class="wrapper">
-    <!-- 단어 추가 -->
-    <div class="section-card">
-      <div class="section-title">✏️ 단어 추가</div>
-      <div class="input-row">
-        <input type="text" id="english-input" placeholder="영어 단어 입력..." autocomplete="off" autocorrect="off" spellcheck="false" />
-        <button class="btn btn-secondary" id="translate-btn">뜻 찾기</button>
+    <!-- Header -->
+    <div class="app-header">
+      <div class="app-logo">
+        <div class="app-logo-icon">📚</div>
+        <div class="app-title">WordMaster</div>
       </div>
-      <div id="translate-status" class="translate-status"></div>
-      <div class="input-row" style="margin-top:8px">
-        <input type="text" id="korean-input" placeholder="한글 뜻 (자동 완성 또는 직접 입력)" />
-        <button class="btn btn-primary" id="add-btn">추가</button>
+      <div class="word-count-badge" id="word-count-badge">0 단어</div>
+    </div>
+
+    <!-- Scrollable content -->
+    <div class="scroll-content">
+
+      <!-- ── VIEW: 단어 관리 ── -->
+      <div id="view-manage" class="view active">
+
+        <!-- Add Word Card -->
+        <div class="card">
+          <div class="card-title">✏️ 단어 추가</div>
+          <div class="field">
+            <label>영단어</label>
+            <div class="input-with-btn">
+              <input type="text" id="in-word" placeholder="예: apple" autocomplete="off" autocapitalize="none" spellcheck="false">
+              <button class="btn btn-primary btn-sm" id="btn-auto" style="width:auto;white-space:nowrap;min-width:100px;">✨ 자동완성</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>한글 뜻</label>
+            <input type="text" id="in-meaning" placeholder="예: 사과, 사과나무" autocomplete="off">
+          </div>
+          <div class="field">
+            <label>영어 예문 (완성)</label>
+            <textarea id="in-example" placeholder="예: There is an apple tree in the garden."></textarea>
+          </div>
+          <div class="field">
+            <label>문제용 예문 (빈칸 ____)</label>
+            <textarea id="in-blank" placeholder="예: There is an ____ tree in the garden."></textarea>
+          </div>
+          <button class="btn btn-primary" id="btn-add">+ 단어 등록</button>
+        </div>
+
+        <!-- Word List -->
+        <div class="list-header">
+          <span class="list-header-title">📖 단어 목록</span>
+          <span class="list-count" id="list-count-text">0개</span>
+        </div>
+        <div id="word-list"></div>
+
+      </div>
+
+      <!-- ── VIEW: 테스트 설정 ── -->
+      <div id="view-test-setup" class="view">
+        <div class="page-title">테스트</div>
+        <div class="page-desc">학습 모드를 선택하고 테스트를 시작하세요.<br>점수가 높은 단어(자주 틀린)부터 출제됩니다.</div>
+
+        <div id="warn-no-words" class="warn-box">❌ 단어가 없습니다. 단어장에 먼저 단어를 추가해주세요.</div>
+
+        <!-- Mode A -->
+        <div class="mode-card mode-a selected" id="card-A" data-mode="A">
+          <div class="mode-card-header">
+            <div class="mode-card-icon">🔤</div>
+            <div style="flex:1">
+              <div class="mode-card-title">A 모드 — 영단어 맞추기</div>
+            </div>
+            <div class="selected-indicator">✓</div>
+          </div>
+          <div class="mode-card-desc">한글 뜻 + 빈칸 예문을 보고<br>영단어를 타이핑해서 맞춥니다.</div>
+        </div>
+
+        <!-- Mode B -->
+        <div class="mode-card mode-b" id="card-B" data-mode="B">
+          <div class="mode-card-header">
+            <div class="mode-card-icon">🇰🇷</div>
+            <div style="flex:1">
+              <div class="mode-card-title">B 모드 — 한글 뜻 맞추기</div>
+            </div>
+            <div class="selected-indicator">✓</div>
+          </div>
+          <div class="mode-card-desc">영단어만 보고 한글 뜻을 입력합니다.<br>레벤슈타인 유사도 75% 이상이면 정답 인정!</div>
+        </div>
+
+        <button class="btn btn-primary" id="btn-start">🚀 테스트 시작</button>
+      </div>
+
+      <!-- ── VIEW: 결과 ── -->
+      <div id="view-results" class="view">
+        <div class="results-hero">
+          <div class="results-percent" id="res-percent">—</div>
+          <div class="results-sub" id="res-sub">정답률</div>
+          <div class="results-stats">
+            <div class="results-stat-item">
+              <div class="results-stat-num" id="res-correct" style="color:var(--success)">0</div>
+              <div class="results-stat-label">정답</div>
+            </div>
+            <div class="results-stat-item">
+              <div class="results-stat-num" id="res-wrong" style="color:var(--error)">0</div>
+              <div class="results-stat-label">오답</div>
+            </div>
+            <div class="results-stat-item">
+              <div class="results-stat-num" id="res-total" style="color:var(--text-dim)">0</div>
+              <div class="results-stat-label">전체</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="wrong-words-section">
+          <div class="section-label" id="wrong-words-label">❌ 틀린 단어</div>
+          <div id="wrong-words-list"></div>
+        </div>
+
+        <div style="margin-top:20px;">
+          <button class="btn btn-primary" id="btn-retry" style="margin-bottom:10px;">🔄 같은 모드로 다시 테스트</button>
+          <button class="btn btn-secondary" id="btn-go-manage">📖 단어장으로 돌아가기</button>
+        </div>
+      </div>
+
+      <!-- ── VIEW: 설정 ── -->
+      <div id="view-settings" class="view">
+        <div class="page-title">설정</div>
+
+        <div class="settings-group">
+          <div class="settings-group-title">🔑 Gemini API</div>
+          <div class="card">
+            <div class="field">
+              <label>Google Gemini API 키</label>
+              <div class="api-key-wrap">
+                <input type="password" id="in-api-key" placeholder="AIza..." autocomplete="off" spellcheck="false">
+                <button class="api-eye-btn" id="btn-eye">👁</button>
+              </div>
+            </div>
+            <button class="btn btn-primary" id="btn-save-key">저장</button>
+            <p style="font-size:13px;color:var(--text-muted);margin-top:12px;line-height:1.6;">
+              키는 이 기기의 브라우저에만 저장됩니다. 외부로 전송되지 않아요.<br>
+              → <a href="https://aistudio.google.com/app/apikey" target="_blank">Google AI Studio에서 발급</a>
+            </p>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <div class="settings-group-title">📊 점수 알고리즘</div>
+          <div class="card">
+            <div class="info-row"><span class="info-icon">📌</span><span>각 단어 초기 점수 0점</span></div>
+            <div class="info-row"><span class="info-icon">❌</span><span>틀릴 때마다 점수 <b style="color:var(--error)">+1</b> → 다음 테스트에서 먼저 출제</span></div>
+            <div class="info-row"><span class="info-icon">✅</span><span>연속 2번 맞추면 점수 <b style="color:var(--success)">-1</b> (최소 0점)</span></div>
+            <div class="info-row"><span class="info-icon">🔀</span><span>같은 점수끼리는 랜덤 출제</span></div>
+            <div class="info-row"><span class="info-icon">🔶</span><span>B모드 유사도 75~95% → 세모(근접 정답)</span></div>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <div class="settings-group-title">⚠️ 데이터 관리</div>
+          <div class="card">
+            <p style="font-size:14px;color:var(--text-dim);margin-bottom:14px;line-height:1.5;">모든 단어와 점수를 삭제합니다. 복구할 수 없습니다.</p>
+            <button class="btn btn-danger" id="btn-clear">🗑 전체 데이터 삭제</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /scroll-content -->
+
+    <!-- Bottom Nav -->
+    <nav class="bottom-nav">
+      <div class="nav-item active" data-nav="manage">
+        <span class="nav-icon">📖</span>
+        <span class="nav-label">단어장</span>
+      </div>
+      <div class="nav-item" data-nav="test-setup">
+        <span class="nav-icon">✏️</span>
+        <span class="nav-label">테스트</span>
+      </div>
+      <div class="nav-item" data-nav="settings">
+        <span class="nav-icon">⚙️</span>
+        <span class="nav-label">설정</span>
+      </div>
+    </nav>
+
+  </div><!-- /main-shell -->
+
+  <!-- ════════════════════════════════════════════
+       TEST SHELL  (full-screen during test)
+       ════════════════════════════════════════════ -->
+  <div id="test-shell">
+
+    <div class="test-topbar">
+      <div class="test-topbar-row">
+        <div class="test-mode-pill" id="test-mode-pill">A 모드</div>
+        <div class="test-progress-text" id="test-progress-text">1 / 10</div>
+      </div>
+      <div class="test-progress-bar">
+        <div class="test-progress-fill" id="test-progress-fill" style="width:0%"></div>
       </div>
     </div>
 
-    <!-- 단어 목록 -->
-    <div class="section-card">
-      <div class="section-title">📚 등록된 단어 <span id="list-count" style="color:var(--accent)"></span></div>
-      <div id="word-list" class="word-list">
-        <div class="empty-state"><span>📖</span>아직 단어가 없어요.<br>위에서 첫 단어를 추가해보세요!</div>
+    <div class="test-body" id="test-body">
+      <!-- Question rendered here by JS -->
+    </div>
+
+    <div class="test-footer" id="test-footer">
+      <div class="feedback-box" id="feedback-box">
+        <div class="feedback-title" id="fb-title"></div>
+        <div class="feedback-answer" id="fb-answer"></div>
       </div>
-    </div>
-  </div>
-
-  <!-- 테스트 시작 버튼 -->
-  <div class="test-start-wrap">
-    <button class="btn btn-primary btn-start" id="start-test-btn">테스트 시작 →</button>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════ TEST SCREEN ═══ -->
-<div id="test-screen">
-  <div class="test-header">
-    <div class="test-progress-text" id="test-progress-text">1 / 10</div>
-    <div class="logo" style="position:absolute;left:50%;transform:translateX(-50%)">
-      <div class="logo-dot"></div>
-      테스트
-    </div>
-    <button class="btn btn-ghost" id="exit-test-btn">나가기 ✕</button>
-  </div>
-  <div class="progress-bar-wrap">
-    <div class="progress-bar-fill" id="progress-bar-fill" style="width:0%"></div>
-  </div>
-
-  <div class="test-body">
-    <div class="test-label">이 단어의 영어 표현은?</div>
-
-    <div class="clue-card">
-      <div class="clue-text" id="clue-text">—</div>
+      <input type="text" class="test-input" id="test-input"
+             placeholder="답을 입력하세요..." autocomplete="off"
+             autocapitalize="none" spellcheck="false">
+      <button class="btn btn-primary" id="btn-check">확인</button>
     </div>
 
-    <div id="wrong-reveal" style="display:none"></div>
+  </div><!-- /test-shell -->
 
-    <div class="answer-area">
-      <input type="text" id="answer-input" placeholder="영어 단어를 입력하세요..."
-             autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
-      <button class="btn btn-primary btn-confirm" id="confirm-btn">확인 ↵</button>
-    </div>
-  </div>
-</div>
+</div><!-- /app -->
 
-<!-- ═══════════════════════════════════════ RESULT SCREEN ═══ -->
-<div id="result-screen">
-  <div class="result-icon" id="result-icon">🎉</div>
-  <div class="result-title" id="result-title">테스트 완료!</div>
-  <div class="result-score-ring" id="result-ring" style="--pct:0%">
-    <div class="result-score-inner">
-      <span class="result-pct" id="result-pct">0%</span>
-      <span class="result-pct-label">정답률</span>
-    </div>
-  </div>
-  <div class="result-stats">
-    <div class="result-stat stat-correct">
-      <span class="num" id="stat-correct">0</span>
-      <span class="lbl">✔ 정답</span>
-    </div>
-    <div class="result-stat stat-wrong">
-      <span class="num" id="stat-wrong">0</span>
-      <span class="lbl">✘ 오답</span>
-    </div>
-    <div class="result-stat">
-      <span class="num" id="stat-total">0</span>
-      <span class="lbl">총 문제</span>
-    </div>
-  </div>
-  <div class="result-actions">
-    <button class="btn btn-primary btn-start" id="retry-btn">다시 테스트</button>
-    <button class="btn btn-secondary btn-start" id="back-btn">단어장으로 돌아가기</button>
-  </div>
-</div>
+<!-- Toast -->
+<div id="toast"></div>
 
-<!-- Feedback overlay -->
-<div class="feedback-overlay" id="feedback-overlay">
-  <div class="feedback-pill" id="feedback-pill"></div>
-</div>
-
+<!-- ══════════════════════════════════════════════════════
+     JAVASCRIPT
+     ══════════════════════════════════════════════════════ -->
 <script>
-// ═══════════════════════════════════════════════
-//  STATE
-// ═══════════════════════════════════════════════
+'use strict';
+
+/* ────────────────────────────────────────
+   STATE
+──────────────────────────────────────── */
 let words = [];
-let testQueue = [];
-let testIndex = 0;
-let testCorrect = 0;
-let testWrong = 0;
-let waitingNext = false;
+let selectedMode = 'A';
 
-const STORAGE_KEY = 'vocabook_words_v1';
+const testState = {
+  active: false,
+  mode: 'A',
+  queue: [],
+  index: 0,
+  correct: 0,
+  wrong: 0,
+  wrongWords: [],
+  feedbackShown: false,
+};
 
-function save() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(words));
+/* ────────────────────────────────────────
+   LOCAL STORAGE
+──────────────────────────────────────── */
+const LS_WORDS = 'wm_words';
+const LS_KEY   = 'wm_apikey';
+
+function loadWords() {
+  try { words = JSON.parse(localStorage.getItem(LS_WORDS) || '[]'); }
+  catch { words = []; }
 }
 
-function load() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) words = JSON.parse(raw);
-  } catch { words = []; }
+function saveWords() {
+  localStorage.setItem(LS_WORDS, JSON.stringify(words));
 }
 
-// ═══════════════════════════════════════════════
-//  DOM REFS
-// ═══════════════════════════════════════════════
-const engInput = document.getElementById('english-input');
-const korInput = document.getElementById('korean-input');
-const translateBtn = document.getElementById('translate-btn');
-const addBtn = document.getElementById('add-btn');
-const wordListEl = document.getElementById('word-list');
-const wordCountBadge = document.getElementById('word-count-badge');
-const listCount = document.getElementById('list-count');
-const startTestBtn = document.getElementById('start-test-btn');
-const translateStatus = document.getElementById('translate-status');
+function getApiKey() { return localStorage.getItem(LS_KEY) || ''; }
+function saveApiKey(k) { localStorage.setItem(LS_KEY, k); }
 
-const mainScreen = document.getElementById('main-screen');
-const testScreen = document.getElementById('test-screen');
-const resultScreen = document.getElementById('result-screen');
+/* ────────────────────────────────────────
+   UTILITIES
+──────────────────────────────────────── */
+function uid() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2);
+}
 
-const testProgressText = document.getElementById('test-progress-text');
-const progressBarFill = document.getElementById('progress-bar-fill');
-const clueText = document.getElementById('clue-text');
-const answerInput = document.getElementById('answer-input');
-const confirmBtn = document.getElementById('confirm-btn');
-const wrongReveal = document.getElementById('wrong-reveal');
-const exitTestBtn = document.getElementById('exit-test-btn');
+function esc(s) {
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
 
-const feedbackOverlay = document.getElementById('feedback-overlay');
-const feedbackPill = document.getElementById('feedback-pill');
-const retryBtn = document.getElementById('retry-btn');
-const backBtn = document.getElementById('back-btn');
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
 
-// ═══════════════════════════════════════════════
-//  RENDER WORD LIST
-// ═══════════════════════════════════════════════
-function renderList() {
-  const count = words.length;
-  wordCountBadge.textContent = `${count} 단어`;
-  listCount.textContent = count ? `(${count})` : '';
+/* ────────────────────────────────────────
+   PRIORITY SORT
+  higher score → comes first; same score → random
+──────────────────────────────────────── */
+function getPriorityQueue() {
+  const groups = {};
+  for (const w of words) {
+    const s = w.score || 0;
+    (groups[s] = groups[s] || []).push(w);
+  }
+  const scores = Object.keys(groups).map(Number).sort((a, b) => b - a);
+  return scores.flatMap(s => shuffle(groups[s]));
+}
 
-  if (!count) {
-    wordListEl.innerHTML = `<div class="empty-state"><span>📖</span>아직 단어가 없어요.<br>위에서 첫 단어를 추가해보세요!</div>`;
-    startTestBtn.disabled = true;
-    startTestBtn.style.opacity = '0.4';
+/* ────────────────────────────────────────
+   LEVENSHTEIN DISTANCE
+──────────────────────────────────────── */
+function levenshtein(a, b) {
+  const m = a.length, n = b.length;
+  if (!m) return n;
+  if (!n) return m;
+  const dp = Array.from({length: m + 1}, (_, i) => {
+    const row = [i];
+    for (let j = 1; j <= n; j++) row[j] = 0;
+    return row;
+  });
+  for (let j = 0; j <= n; j++) dp[0][j] = j;
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      dp[i][j] = a[i-1] === b[j-1]
+        ? dp[i-1][j-1]
+        : 1 + Math.min(dp[i-1][j-1], dp[i-1][j], dp[i][j-1]);
+    }
+  }
+  return dp[m][n];
+}
+
+function similarity(a, b) {
+  if (!a && !b) return 1;
+  const maxLen = Math.max(a.length, b.length);
+  if (!maxLen) return 1;
+  return 1 - levenshtein(a, b) / maxLen;
+}
+
+/* ────────────────────────────────────────
+   KOREAN ANSWER CHECKING (B mode)
+──────────────────────────────────────── */
+function normalizeKr(s) {
+  // Remove whitespace, common particles, punctuation
+  return s
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, '')
+    .replace(/[.,!?~]/g, '');
+}
+
+/**
+ * Returns { pass: boolean, partial: boolean }
+ * pass    → count as correct
+ * partial → correct but not perfect (세모)
+ */
+function judgeKorean(input, answer) {
+  const i = normalizeKr(input);
+  const a = normalizeKr(answer);
+
+  if (!i) return { pass: false, partial: false };
+  if (i === a) return { pass: true, partial: false };
+
+  const sim = similarity(i, a);
+  if (sim >= 0.92) return { pass: true, partial: false };
+  if (sim >= 0.72) return { pass: true, partial: true };
+
+  // Check multiple meanings (answer may be "사과, 나무")
+  const parts = answer.split(/[,\/·;]+/).map(p => normalizeKr(p)).filter(Boolean);
+  for (const part of parts) {
+    if (!part) continue;
+    const ps = similarity(i, part);
+    if (ps >= 0.92) return { pass: true, partial: false };
+    if (ps >= 0.72) return { pass: true, partial: true };
+    // Substring match
+    if (part.length >= 2 && (i.includes(part) || part.includes(i)) &&
+        i.length / part.length >= 0.55) {
+      return { pass: true, partial: true };
+    }
+  }
+
+  return { pass: false, partial: false };
+}
+
+/* ────────────────────────────────────────
+   GEMINI API CALL
+──────────────────────────────────────── */
+async function callGemini(word) {
+  const apiKey = getApiKey();
+  if (!apiKey) throw new Error('API 키를 설정 탭에서 먼저 입력해주세요.');
+
+  const prompt =
+`영어 단어 "${word}"에 대해 아래 JSON만 응답해줘. 코드블록(backtick)이나 추가 텍스트 없이 JSON 오브젝트만:
+{
+  "meaning": "자연스러운 한글 뜻 (핵심 의미 1~3가지, 콤마 구분)",
+  "example": "${word}가 포함된 자연스러운 영어 예문 1문장",
+  "blankExample": "위 예문에서 ${word}를 정확히 ____로 대체한 문장"
+}`;
+
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+    }
+  );
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(`API 오류 ${res.status}: ${err?.error?.message || res.statusText}`);
+  }
+
+  const data = await res.json();
+  const raw = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+
+  // Extract JSON object from response (handles possible markdown wrapping)
+  const match = raw.match(/\{[\s\S]*\}/);
+  if (!match) throw new Error('응답 파싱 실패. 다시 시도해주세요.');
+
+  return JSON.parse(match[0]);
+}
+
+/* ────────────────────────────────────────
+   TOAST
+──────────────────────────────────────── */
+let toastTimer = null;
+function showToast(msg, dur = 2600) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), dur);
+}
+
+/* ────────────────────────────────────────
+   NAVIGATION
+──────────────────────────────────────── */
+function showView(name) {
+  // Always switch to main shell
+  document.getElementById('main-shell').style.display = 'flex';
+  document.getElementById('test-shell').classList.remove('active');
+
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  const view = document.getElementById('view-' + name);
+  if (view) view.classList.add('active');
+
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.classList.toggle('active', item.dataset.nav === name);
+  });
+
+  if (name === 'manage') renderWordList();
+}
+
+function showTestShell() {
+  document.getElementById('main-shell').style.display = 'none';
+  document.getElementById('test-shell').classList.add('active');
+  // Remove nav active
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+}
+
+/* ────────────────────────────────────────
+   WORD LIST RENDER
+──────────────────────────────────────── */
+function renderWordList() {
+  const container = document.getElementById('word-list');
+  const badge     = document.getElementById('word-count-badge');
+  const countText = document.getElementById('list-count-text');
+
+  badge.textContent     = `${words.length} 단어`;
+  countText.textContent = `${words.length}개`;
+
+  if (!words.length) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">📭</div>
+        <div class="empty-title">단어장이 비어있어요</div>
+        <div class="empty-desc">위에서 단어를 입력하고<br>Gemini 자동완성으로 빠르게 추가해보세요!</div>
+      </div>`;
     return;
   }
 
-  startTestBtn.disabled = false;
-  startTestBtn.style.opacity = '1';
+  // Sort by score desc, then alphabetically
+  const sorted = [...words].sort((a, b) => (b.score||0) - (a.score||0) || a.word.localeCompare(b.word));
 
-  // Sort by score desc, then by eng alphabetically
-  const sorted = [...words].sort((a, b) => b.score - a.score || a.eng.localeCompare(b.eng));
-
-  wordListEl.innerHTML = sorted.map(w => {
-    const sc = w.score;
-    const badgeClass = sc === 0 ? 'score-0' : sc <= 2 ? 'score-low' : sc <= 4 ? 'score-mid' : 'score-high';
-    return `
-      <div class="word-item" data-id="${w.id}">
-        <div class="word-score-badge ${badgeClass}">${sc}</div>
-        <div class="word-eng">${escHtml(w.eng)}</div>
-        <div class="word-sep">·</div>
-        <div class="word-kor">${escHtml(w.kor)}</div>
-        <button class="btn btn-ghost" onclick="deleteWord('${w.id}')" title="삭제">✕</button>
+  container.innerHTML = sorted.map(w => `
+    <div class="word-item">
+      <div class="word-item-body">
+        <div class="wi-word">${esc(w.word)}</div>
+        <div class="wi-meaning">${esc(w.meaning)}</div>
+        ${w.example ? `<div class="wi-example">${esc(w.example)}</div>` : ''}
       </div>
-    `;
-  }).join('');
+      ${(w.score||0) > 0 ? `<div class="score-badge">★ ${w.score}</div>` : ''}
+      <button class="btn btn-danger btn-sm" onclick="deleteWord('${w.id}')">✕</button>
+    </div>`).join('');
 }
 
-function escHtml(s) {
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+/* ────────────────────────────────────────
+   WORD CRUD
+──────────────────────────────────────── */
+function deleteWord(id) {
+  if (!confirm('이 단어를 삭제할까요?')) return;
+  words = words.filter(w => w.id !== id);
+  saveWords();
+  renderWordList();
 }
-
-// ═══════════════════════════════════════════════
-//  TRANSLATE (MyMemory API)
-// ═══════════════════════════════════════════════
-async function translate(word) {
-  translateStatus.className = 'translate-status loading';
-  translateStatus.textContent = '번역 중...';
-  translateBtn.disabled = true;
-
-  try {
-    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(word.trim())}&langpair=en|ko`;
-    const res = await fetch(url);
-    const data = await res.json();
-    if (data.responseStatus === 200 && data.responseData?.translatedText) {
-      let result = data.responseData.translatedText;
-      // Clean up common garbage
-      result = result.replace(/MYMEMORY WARNING.*$/i, '').trim();
-      if (result && result !== word) {
-        korInput.value = result;
-        translateStatus.className = 'translate-status';
-        translateStatus.textContent = `✓ "${result}" 로 자동 입력됐어요. 수정해도 됩니다.`;
-      } else {
-        translateStatus.className = 'translate-status error';
-        translateStatus.textContent = '뜻을 찾지 못했어요. 직접 입력해주세요.';
-      }
-    } else {
-      throw new Error('no result');
-    }
-  } catch {
-    translateStatus.className = 'translate-status error';
-    translateStatus.textContent = '번역 실패. 직접 뜻을 입력해주세요.';
-  } finally {
-    translateBtn.disabled = false;
-  }
-}
-
-translateBtn.addEventListener('click', () => {
-  const w = engInput.value.trim();
-  if (!w) { engInput.focus(); return; }
-  translate(w);
-});
-
-engInput.addEventListener('keydown', e => {
-  if (e.key === 'Enter') {
-    e.preventDefault();
-    const w = engInput.value.trim();
-    if (w) translate(w);
-  }
-});
-
-// ═══════════════════════════════════════════════
-//  ADD / DELETE
-// ═══════════════════════════════════════════════
-addBtn.addEventListener('click', addWord);
-korInput.addEventListener('keydown', e => { if (e.key === 'Enter') addWord(); });
 
 function addWord() {
-  const eng = engInput.value.trim().toLowerCase();
-  const kor = korInput.value.trim();
-  if (!eng || !kor) {
-    if (!eng) { engInput.focus(); engInput.style.borderColor = 'var(--red)'; setTimeout(()=>engInput.style.borderColor='',1200); }
-    else { korInput.focus(); korInput.style.borderColor = 'var(--red)'; setTimeout(()=>korInput.style.borderColor='',1200); }
-    return;
+  const word    = document.getElementById('in-word').value.trim();
+  const meaning = document.getElementById('in-meaning').value.trim();
+  const example = document.getElementById('in-example').value.trim();
+  const blank   = document.getElementById('in-blank').value.trim();
+
+  if (!word)    { showToast('⚠️ 영단어를 입력해주세요'); return; }
+  if (!meaning) { showToast('⚠️ 한글 뜻을 입력해주세요'); return; }
+
+  if (words.find(w => w.word.toLowerCase() === word.toLowerCase())) {
+    showToast(`"${word}"는 이미 등록되어 있어요`); return;
   }
-  if (words.some(w => w.eng === eng)) {
-    translateStatus.className = 'translate-status error';
-    translateStatus.textContent = `"${eng}" 는 이미 등록된 단어예요.`;
-    return;
-  }
-  words.unshift({ id: Date.now().toString(), eng, kor, score: 0, streak: 0 });
-  save();
-  renderList();
-  engInput.value = '';
-  korInput.value = '';
-  translateStatus.className = 'translate-status';
-  translateStatus.textContent = '';
-  engInput.focus();
+
+  words.push({
+    id: uid(),
+    word,
+    meaning,
+    example,
+    blankExample: blank,
+    score: 0,
+    consecutiveCorrect: 0,
+  });
+
+  saveWords();
+  renderWordList();
+
+  document.getElementById('in-word').value    = '';
+  document.getElementById('in-meaning').value = '';
+  document.getElementById('in-example').value = '';
+  document.getElementById('in-blank').value   = '';
+  document.getElementById('in-word').focus();
+
+  showToast(`✅ "${word}" 등록 완료!`);
 }
 
-function deleteWord(id) {
-  words = words.filter(w => w.id !== id);
-  save();
-  renderList();
+async function doAutocomplete() {
+  const word = document.getElementById('in-word').value.trim();
+  if (!word) { showToast('⚠️ 먼저 영단어를 입력해주세요'); return; }
+
+  const btn = document.getElementById('btn-auto');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> 불러오는 중...';
+
+  try {
+    const data = await callGemini(word);
+    document.getElementById('in-meaning').value = data.meaning || '';
+    document.getElementById('in-example').value = data.example || '';
+    document.getElementById('in-blank').value   = data.blankExample || '';
+    showToast('✨ 자동완성 완료!');
+  } catch (err) {
+    showToast('❌ ' + err.message, 4000);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '✨ 자동완성';
+  }
 }
 
-// ═══════════════════════════════════════════════
-//  TEST LOGIC
-// ═══════════════════════════════════════════════
-startTestBtn.addEventListener('click', startTest);
-
+/* ────────────────────────────────────────
+   TEST — START
+──────────────────────────────────────── */
 function startTest() {
-  if (!words.length) return;
+  if (!words.length) {
+    document.getElementById('warn-no-words').style.display = 'block';
+    return;
+  }
+  document.getElementById('warn-no-words').style.display = 'none';
 
-  // Build queue: sort by score desc, shuffle within same-score groups
-  const grouped = {};
-  words.forEach(w => {
-    if (!grouped[w.score]) grouped[w.score] = [];
-    grouped[w.score].push({...w}); // snapshot
-  });
-  testQueue = [];
-  Object.keys(grouped).sort((a,b)=>b-a).forEach(sc => {
-    const arr = grouped[sc];
-    for (let i = arr.length-1; i > 0; i--) {
-      const j = Math.floor(Math.random()*(i+1));
-      [arr[i],arr[j]] = [arr[j],arr[i]];
-    }
-    testQueue.push(...arr);
-  });
+  testState.mode       = selectedMode;
+  testState.queue      = getPriorityQueue();
+  testState.index      = 0;
+  testState.correct    = 0;
+  testState.wrong      = 0;
+  testState.wrongWords = [];
 
-  testIndex = 0;
-  testCorrect = 0;
-  testWrong = 0;
-  waitingNext = false;
-
-  mainScreen.style.display = 'none';
-  resultScreen.style.display = 'none';
-  testScreen.style.display = 'flex';
-  testScreen.style.flexDirection = 'column';
-
-  showQuestion();
-  setTimeout(() => answerInput.focus(), 100);
+  showTestShell();
+  renderQuestion();
 }
 
-function showQuestion() {
-  const total = testQueue.length;
-  const current = testIndex + 1;
-  testProgressText.textContent = `${current} / ${total}`;
-  progressBarFill.style.width = `${((current-1)/total)*100}%`;
+/* ────────────────────────────────────────
+   TEST — RENDER QUESTION
+──────────────────────────────────────── */
+function renderQuestion() {
+  const word  = testState.queue[testState.index];
+  const total = testState.queue.length;
+  const cur   = testState.index + 1;
 
-  const word = testQueue[testIndex];
-  clueText.textContent = word.kor;
-  answerInput.value = '';
-  answerInput.style.borderColor = '';
-  wrongReveal.style.display = 'none';
-  wrongReveal.innerHTML = '';
-  waitingNext = false;
-  confirmBtn.textContent = '확인 ↵';
+  // Progress bar
+  const pct = Math.round(((cur - 1) / total) * 100);
+  document.getElementById('test-progress-fill').style.width = pct + '%';
+  document.getElementById('test-progress-text').textContent = `${cur} / ${total}`;
+  document.getElementById('test-mode-pill').textContent = testState.mode === 'A' ? 'A 모드 · 영단어 맞추기' : 'B 모드 · 한글 뜻 맞추기';
 
-  setTimeout(() => answerInput.focus(), 80);
-}
+  // Question body
+  const body = document.getElementById('test-body');
 
-confirmBtn.addEventListener('click', handleAnswer);
-answerInput.addEventListener('keydown', e => {
-  if (e.key === 'Enter') {
-    e.preventDefault();
-    if (waitingNext) { nextQuestion(); }
-    else { handleAnswer(); }
-  }
-});
+  if (testState.mode === 'A') {
+    // Show: meaning + blank example  → type the english word
+    const blankHtml = word.blankExample
+      ? `<div class="test-q-label" style="margin-top:20px">📝 빈칸 예문</div>
+         <div class="test-example-box">${esc(word.blankExample).replace(/____/g, '<strong>____</strong>')}</div>`
+      : '';
 
-function handleAnswer() {
-  if (waitingNext) { nextQuestion(); return; }
-
-  const userAns = answerInput.value.trim().toLowerCase();
-  if (!userAns) { answerInput.focus(); return; }
-
-  const word = testQueue[testIndex];
-  const correct = userAns === word.eng.toLowerCase();
-
-  // Update master words array
-  const master = words.find(w => w.id === word.id);
-  if (master) {
-    if (correct) {
-      master.streak = (master.streak || 0) + 1;
-      if (master.streak >= 2) {
-        master.score = Math.max(0, master.score - 1);
-        master.streak = 0;
-      }
-      testCorrect++;
-    } else {
-      master.score += 1;
-      master.streak = 0;
-      testWrong++;
-    }
-    save();
-  }
-
-  if (correct) {
-    answerInput.style.borderColor = 'var(--green)';
-    showFeedback(true);
-    waitingNext = true;
-    confirmBtn.textContent = '다음 →';
-    setTimeout(() => nextQuestion(), 900);
+    body.innerHTML = `
+      <div class="test-q-label">🇰🇷 한글 뜻</div>
+      <div class="test-meaning-big">${esc(word.meaning)}</div>
+      ${blankHtml}`;
   } else {
-    answerInput.style.borderColor = 'var(--red)';
-    showFeedback(false);
-    wrongReveal.innerHTML = `
-      <div class="wrong-answer-reveal">
-        <div class="label">정답</div>
-        <div class="answer">${escHtml(word.eng)}</div>
-      </div>`;
-    wrongReveal.style.display = 'block';
-    waitingNext = true;
-    confirmBtn.textContent = '다음 →';
-    answerInput.focus();
+    // Show: english word → type the korean meaning
+    body.innerHTML = `
+      <div class="test-q-label">🔤 영단어</div>
+      <div class="test-word-big">${esc(word.word)}</div>
+      <div class="test-hint-text">한글 뜻을 입력하세요<br><span style="color:var(--text-muted);font-size:13px;">유사도 75% 이상이면 정답 인정 · 조사·띄어쓰기 무관</span></div>`;
   }
+
+  // Reset input & button
+  const input = document.getElementById('test-input');
+  input.value = '';
+  input.className = 'test-input';
+  input.disabled = false;
+  input.placeholder = testState.mode === 'A' ? '영단어를 입력하세요...' : '한글 뜻을 입력하세요...';
+
+  const fb = document.getElementById('feedback-box');
+  fb.className = 'feedback-box';
+
+  const btn = document.getElementById('btn-check');
+  btn.textContent = '확인';
+  btn.className = 'btn btn-primary';
+
+  testState.feedbackShown = false;
+
+  // Scroll to top of test-body
+  body.scrollTop = 0;
+
+  // Focus input (slight delay for layout)
+  setTimeout(() => input.focus(), 120);
 }
 
-function nextQuestion() {
-  testIndex++;
-  if (testIndex >= testQueue.length) {
-    showResult();
+/* ────────────────────────────────────────
+   TEST — CHECK ANSWER
+──────────────────────────────────────── */
+function checkAnswer() {
+  if (testState.feedbackShown) {
+    advanceTest();
+    return;
+  }
+
+  const input = document.getElementById('test-input');
+  const ans   = input.value.trim();
+  if (!ans) { showToast('⚠️ 답을 입력해주세요'); return; }
+
+  const word = testState.queue[testState.index];
+  let pass = false, partial = false;
+
+  if (testState.mode === 'A') {
+    // English word — exact match (case-insensitive)
+    pass    = ans.toLowerCase() === word.word.toLowerCase();
+    partial = false;
   } else {
-    showQuestion();
+    const r = judgeKorean(ans, word.meaning);
+    pass    = r.pass;
+    partial = r.partial;
+  }
+
+  // ── Update score ──
+  if (pass) {
+    word.consecutiveCorrect = (word.consecutiveCorrect || 0) + 1;
+    if (word.consecutiveCorrect >= 2) {
+      word.score = Math.max(0, (word.score || 0) - 1);
+      word.consecutiveCorrect = 0;
+    }
+    testState.correct++;
+  } else {
+    word.score = (word.score || 0) + 1;
+    word.consecutiveCorrect = 0;
+    testState.wrong++;
+    if (!testState.wrongWords.find(w => w.id === word.id)) {
+      testState.wrongWords.push(word);
+    }
+  }
+
+  saveWords();
+
+  // ── Visual feedback ──
+  const fb     = document.getElementById('feedback-box');
+  const fbTitle = document.getElementById('fb-title');
+  const fbAns   = document.getElementById('fb-answer');
+  const correctAnswer = testState.mode === 'A' ? word.word : word.meaning;
+
+  if (pass && !partial) {
+    input.className = 'test-input state-correct';
+    fb.className = 'feedback-box correct show';
+    fbTitle.textContent = '🎉 정답!';
+    fbAns.textContent   = correctAnswer;
+  } else if (pass && partial) {
+    input.className = 'test-input state-partial';
+    fb.className = 'feedback-box partial show';
+    fbTitle.textContent = '🔶 근접 정답 (세모)';
+    fbAns.textContent   = '정답: ' + correctAnswer;
+  } else {
+    input.className = 'test-input state-wrong';
+    fb.className = 'feedback-box wrong show';
+    fbTitle.textContent = '❌ 오답';
+    fbAns.textContent   = '정답: ' + correctAnswer;
+  }
+
+  input.disabled = true;
+
+  // Update button
+  const btn = document.getElementById('btn-check');
+  const isLast = testState.index >= testState.queue.length - 1;
+
+  btn.textContent = isLast ? '결과 보기 →' : '다음 →';
+  btn.className = pass
+    ? (partial ? 'btn btn-warning' : 'btn btn-success')
+    : 'btn btn-danger';
+
+  testState.feedbackShown = true;
+
+  // Scroll footer into view (keyboard may have moved things)
+  document.getElementById('test-body').scrollTop = 9999;
+}
+
+function advanceTest() {
+  testState.index++;
+  if (testState.index >= testState.queue.length) {
+    showResults();
+  } else {
+    renderQuestion();
   }
 }
 
-function showFeedback(correct) {
-  feedbackPill.className = `feedback-pill ${correct ? 'feedback-correct' : 'feedback-wrong'}`;
-  feedbackPill.textContent = correct ? '✓ 정답!' : '✗ 오답';
-  feedbackOverlay.classList.add('show');
-  setTimeout(() => feedbackOverlay.classList.remove('show'), 800);
+/* ────────────────────────────────────────
+   RESULTS
+──────────────────────────────────────── */
+function showResults() {
+  const total = testState.correct + testState.wrong;
+  const pct   = total ? Math.round((testState.correct / total) * 100) : 0;
+
+  document.getElementById('res-percent').textContent = pct + '%';
+  document.getElementById('res-correct').textContent = testState.correct;
+  document.getElementById('res-wrong').textContent   = testState.wrong;
+  document.getElementById('res-total').textContent   = total;
+
+  let emoji = pct >= 90 ? '🏆 완벽!' : pct >= 70 ? '👍 잘 했어요!' : pct >= 50 ? '📚 더 노력해요!' : '💪 다시 도전!';
+  document.getElementById('res-sub').textContent = emoji;
+
+  const listEl = document.getElementById('wrong-words-list');
+  const section = document.getElementById('wrong-words-section');
+
+  if (!testState.wrongWords.length) {
+    listEl.innerHTML = `<div style="text-align:center;padding:28px 20px;color:var(--success);font-size:18px;font-weight:800;">🎊 틀린 단어가 없습니다!</div>`;
+  } else {
+    document.getElementById('wrong-words-label').textContent = `❌ 틀린 단어 (${testState.wrongWords.length}개)`;
+    listEl.innerHTML = testState.wrongWords.map(w => `
+      <div class="wrong-word-item">
+        <div class="wwi-word">${esc(w.word)}</div>
+        <div class="wwi-meaning">${esc(w.meaning)}</div>
+        ${w.example ? `<div class="wwi-example">${esc(w.example)}</div>` : ''}
+      </div>`).join('');
+  }
+
+  showView('results');
 }
 
-// ═══════════════════════════════════════════════
-//  RESULT
-// ═══════════════════════════════════════════════
-function showResult() {
-  testScreen.style.display = 'none';
-  resultScreen.style.display = 'flex';
-  resultScreen.style.flexDirection = 'column';
+/* ────────────────────────────────────────
+   MOBILE KEYBOARD HANDLING
+  On Android (dvh support), the flex layout naturally
+  compresses when the keyboard appears.
+  For extra safety we also listen to visualViewport.
+──────────────────────────────────────── */
+function setupKeyboardHandler() {
+  if (!window.visualViewport) return;
 
-  const total = testQueue.length;
-  const pct = total ? Math.round((testCorrect / total) * 100) : 0;
-
-  document.getElementById('result-pct').textContent = `${pct}%`;
-  document.getElementById('stat-correct').textContent = testCorrect;
-  document.getElementById('stat-wrong').textContent = testWrong;
-  document.getElementById('stat-total').textContent = total;
-
-  const ring = document.getElementById('result-ring');
-  ring.style.setProperty('--pct', `${pct}%`);
-
-  const icon = document.getElementById('result-icon');
-  const title = document.getElementById('result-title');
-  if (pct === 100) { icon.textContent = '🏆'; title.textContent = '완벽해요!'; }
-  else if (pct >= 80) { icon.textContent = '🎉'; title.textContent = '훌륭해요!'; }
-  else if (pct >= 60) { icon.textContent = '💪'; title.textContent = '잘하고 있어요!'; }
-  else { icon.textContent = '📖'; title.textContent = '계속 연습해요!'; }
-
-  renderList(); // update scores in list
+  window.visualViewport.addEventListener('resize', () => {
+    // When test is active and keyboard opens, scroll footer into view
+    if (document.getElementById('test-shell').classList.contains('active')) {
+      const body = document.getElementById('test-body');
+      if (body) body.scrollTop = body.scrollHeight;
+    }
+  });
 }
 
-retryBtn.addEventListener('click', () => {
-  resultScreen.style.display = 'none';
-  startTest();
-});
+/* ────────────────────────────────────────
+   EVENT LISTENERS
+──────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  loadWords();
+  renderWordList();
 
-backBtn.addEventListener('click', () => {
-  resultScreen.style.display = 'none';
-  mainScreen.style.display = 'block';
-});
+  // Load saved API key
+  const savedKey = getApiKey();
+  if (savedKey) document.getElementById('in-api-key').value = savedKey;
 
-exitTestBtn.addEventListener('click', () => {
-  testScreen.style.display = 'none';
-  mainScreen.style.display = 'block';
-  save();
-  renderList();
-});
+  setupKeyboardHandler();
 
-// ═══════════════════════════════════════════════
-//  INIT
-// ═══════════════════════════════════════════════
-load();
-renderList();
-engInput.focus();
+  // ── Nav ──
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', () => showView(item.dataset.nav));
+  });
+
+  // ── Mode cards ──
+  document.querySelectorAll('.mode-card').forEach(card => {
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      selectedMode = card.dataset.mode;
+    });
+  });
+
+  // ── Manage view ──
+  document.getElementById('btn-auto').addEventListener('click', doAutocomplete);
+  document.getElementById('btn-add').addEventListener('click', addWord);
+
+  // Enter key in word input
+  document.getElementById('in-word').addEventListener('keydown', e => {
+    if (e.key === 'Enter') document.getElementById('in-meaning').focus();
+  });
+  document.getElementById('in-meaning').addEventListener('keydown', e => {
+    if (e.key === 'Enter') document.getElementById('in-example').focus();
+  });
+
+  // ── Test setup ──
+  document.getElementById('btn-start').addEventListener('click', startTest);
+
+  // ── Test ──
+  document.getElementById('btn-check').addEventListener('click', checkAnswer);
+  document.getElementById('test-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') checkAnswer();
+  });
+
+  // ── Results ──
+  document.getElementById('btn-retry').addEventListener('click', () => {
+    // Restart with same mode
+    startTest();
+  });
+
+  document.getElementById('btn-go-manage').addEventListener('click', () => showView('manage'));
+
+  // ── Settings ──
+  document.getElementById('btn-save-key').addEventListener('click', () => {
+    const k = document.getElementById('in-api-key').value.trim();
+    if (!k) { showToast('⚠️ API 키를 입력해주세요'); return; }
+    saveApiKey(k);
+    showToast('✅ API 키 저장 완료');
+  });
+
+  document.getElementById('btn-eye').addEventListener('click', () => {
+    const inp = document.getElementById('in-api-key');
+    const btn = document.getElementById('btn-eye');
+    if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
+    else                         { inp.type = 'password'; btn.textContent = '👁'; }
+  });
+
+  document.getElementById('btn-clear').addEventListener('click', () => {
+    if (confirm('모든 단어와 학습 데이터를 삭제할까요?\n이 작업은 되돌릴 수 없습니다.')) {
+      localStorage.removeItem(LS_WORDS);
+      words = [];
+      renderWordList();
+      showToast('🗑 데이터 삭제 완료');
+    }
+  });
+
+  // ── Prevent pull-to-refresh on mobile for test shell ──
+  document.getElementById('test-body').addEventListener('touchstart', () => {}, { passive: true });
+});
 </script>
 </body>
 </html>
