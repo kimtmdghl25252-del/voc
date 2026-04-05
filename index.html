@@ -464,8 +464,11 @@ async function handleSearch() {
   btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
   
   try {
-    const sys = `You are a dictionary. Return strictly a JSON object formatted exactly as {"eng": "...", "kor": "..."}.`;
-    const user = `Translate "${query}". If it's English, provide its Korean meaning in 'kor' and keep 'eng' as is. If it's Korean, provide the English word in 'eng' and keep 'kor' as is.`;
+    const sys = `You are a highly accurate English-Korean dictionary. Output ONLY a valid JSON object with keys "eng" and "kor". No other text.`;
+    const user = `Word: "${query}"
+Rule 1: If the Word is in Korean, "eng" must be the English translation, and "kor" MUST be exactly "${query}".
+Rule 2: If the Word is in English, "eng" MUST be exactly "${query}", and "kor" must be the Korean translation.
+Output JSON: {"eng": "...", "kor": "..."}`;
     const result = await callGroqJSON(sys, user);
     
     document.getElementById('in-word').value = result.eng || '';
