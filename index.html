@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>단어장 · Vocabook</title>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Space+Grotesk:wght@400;500;600;700&family=DM+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f3ec;
+    --surface: #fffef9;
+    --surface2: #f0ebe0;
+    --border: #ddd5c4;
+    --text: #2c2416;
+    --text2: #7a6e5f;
+    --accent: #c8521a;
+    --accent-soft: #faeade;
+    --green: #2d7a4f;
+    --green-soft: #d9f0e5;
+    --red: #b53232;
+    --red-soft: #fde8e8;
+    --yellow: #c9870b;
+    --yellow-soft: #fef3dc;
+    --shadow: 0 2px 12px rgba(44,36,22,0.08);
+    --shadow-md: 0 4px 24px rgba(44,36,22,0.12);
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Gowun Dodum', serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    background-image:
+      radial-gradient(circle at 20% 50%, rgba(200,82,26,0.04) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(200,135,11,0.05) 0%, transparent 50%);
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--surface);
+    border-bottom: 1.5px solid var(--border);
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 58px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 1px 8px rgba(44,36,22,0.06);
+  }
+
+  .logo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: -0.02em;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .logo-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; }
+
+  .word-count-badge {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-radius: 20px;
+    padding: 3px 10px;
+  }
+
+  /* ── MAIN WRAPPER ── */
+  .wrapper {
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 20px 16px 80px;
+  }
+
+  /* ── SECTIONS ── */
+  .section-card {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
+  }
+
+  .section-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text2);
+    margin-bottom: 14px;
+  }
+
+  /* ── INPUT AREA ── */
+  .input-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  input[type="text"] {
+    flex: 1;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 13px;
+    font-family: 'Gowun Dodum', serif;
+    font-size: 0.95rem;
+    background: var(--bg);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  input[type="text"]:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(200,82,26,0.1);
+  }
+  input[type="text"]::placeholder { color: #bbb0a0; }
+
+  #english-input {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.95rem;
+  }
+
+  .btn {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 0.82rem;
+    padding: 10px 14px;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+    letter-spacing: 0.01em;
+  }
+  .btn:active { transform: scale(0.97); }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+  }
+  .btn-primary:hover { background: #b04315; }
+
+  .btn-secondary {
+    background: var(--surface2);
+    color: var(--text);
+    border: 1.5px solid var(--border);
+  }
+  .btn-secondary:hover { background: var(--border); }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text2);
+    padding: 6px 10px;
+    font-size: 0.78rem;
+  }
+  .btn-ghost:hover { color: var(--red); }
+
+  .btn-green {
+    background: var(--green);
+    color: #fff;
+  }
+  .btn-green:hover { background: #246040; }
+
+  .translate-status {
+    font-size: 0.78rem;
+    color: var(--text2);
+    min-height: 18px;
+    padding: 2px 0;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+  .translate-status.loading { color: var(--yellow); }
+  .translate-status.error { color: var(--red); }
+
+  /* ── WORD LIST ── */
+  .word-list { display: flex; flex-direction: column; gap: 8px; }
+
+  .word-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    transition: all 0.15s;
+    animation: slideIn 0.2s ease-out;
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .word-item:hover { border-color: #c8b9a5; }
+
+  .word-score-badge {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    min-width: 26px;
+    height: 22px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .score-0 { background: var(--surface2); color: var(--text2); }
+  .score-low { background: var(--yellow-soft); color: var(--yellow); }
+  .score-mid { background: #ffe0cc; color: #c85a1a; }
+  .score-high { background: var(--red-soft); color: var(--red); }
+
+  .word-eng {
+    font-family: 'DM Mono', monospace;
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: var(--text);
+    min-width: 90px;
+  }
+
+  .word-sep {
+    color: var(--border);
+    font-size: 0.85rem;
+  }
+
+  .word-kor {
+    font-size: 0.88rem;
+    color: var(--text2);
+    flex: 1;
+  }
+
+  .empty-state {
+    text-align: center;
+    color: var(--text2);
+    font-size: 0.88rem;
+    padding: 24px 0;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+  .empty-state span { display: block; font-size: 1.8rem; margin-bottom: 8px; }
+
+  /* ── START TEST BTN ── */
+  .test-start-wrap {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    padding: 14px 16px;
+    background: linear-gradient(transparent, var(--bg) 40%);
+    display: flex;
+    justify-content: center;
+  }
+
+  .btn-start {
+    width: 100%;
+    max-width: 520px;
+    padding: 14px;
+    font-size: 0.95rem;
+    border-radius: var(--radius);
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+
+  /* ── TEST SCREEN ── */
+  #test-screen {
+    display: none;
+    flex-direction: column;
+    min-height: 100vh;
+    background: var(--bg);
+    background-image:
+      radial-gradient(circle at 10% 80%, rgba(200,82,26,0.05) 0%, transparent 45%),
+      radial-gradient(circle at 90% 10%, rgba(45,122,79,0.04) 0%, transparent 45%);
+  }
+
+  .test-header {
+    background: var(--surface);
+    border-bottom: 1.5px solid var(--border);
+    padding: 0 20px;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 1px 8px rgba(44,36,22,0.06);
+  }
+
+  .test-progress-text {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text2);
+  }
+
+  .progress-bar-wrap {
+    height: 3px;
+    background: var(--surface2);
+    position: relative;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.4s ease;
+    border-radius: 0 2px 2px 0;
+  }
+
+  .test-body {
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 32px 20px 40px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .test-label {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text2);
+    text-align: center;
+  }
+
+  .clue-card {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 20px;
+    padding: 36px 28px;
+    text-align: center;
+    box-shadow: var(--shadow-md);
+    position: relative;
+    overflow: hidden;
+  }
+  .clue-card::before {
+    content: '';
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 100px; height: 100px;
+    background: radial-gradient(circle, rgba(200,82,26,0.07) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .clue-text {
+    font-size: 2rem;
+    font-weight: 400;
+    line-height: 1.4;
+    color: var(--text);
+    word-break: keep-all;
+  }
+
+  .answer-area { display: flex; flex-direction: column; gap: 10px; }
+
+  #answer-input {
+    width: 100%;
+    text-align: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 1.15rem;
+    padding: 14px;
+    border-radius: var(--radius);
+    border: 2px solid var(--border);
+    background: var(--surface);
+    letter-spacing: 0.06em;
+  }
+  #answer-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px rgba(200,82,26,0.1);
+  }
+
+  .btn-confirm {
+    width: 100%;
+    padding: 14px;
+    font-size: 0.95rem;
+    border-radius: var(--radius);
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+
+  /* ── FEEDBACK ── */
+  .feedback-overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .feedback-overlay.show { opacity: 1; }
+
+  .feedback-pill {
+    padding: 12px 28px;
+    border-radius: 40px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    box-shadow: var(--shadow-md);
+    transform: translateY(0);
+    animation: pillPop 0.25s ease-out;
+  }
+  @keyframes pillPop {
+    from { transform: scale(0.85) translateY(10px); }
+    to { transform: scale(1) translateY(0); }
+  }
+  .feedback-correct { background: var(--green); color: #fff; }
+  .feedback-wrong { background: var(--red); color: #fff; }
+
+  .wrong-answer-reveal {
+    text-align: center;
+    padding: 14px 20px;
+    background: var(--red-soft);
+    border: 1.5px solid #f4bcbc;
+    border-radius: var(--radius);
+    animation: slideIn 0.2s ease-out;
+  }
+  .wrong-answer-reveal .label {
+    font-size: 0.72rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--red);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .wrong-answer-reveal .answer {
+    font-family: 'DM Mono', monospace;
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: var(--red);
+  }
+
+  /* ── RESULT SCREEN ── */
+  #result-screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: var(--bg);
+    padding: 40px 20px;
+    text-align: center;
+    gap: 20px;
+  }
+
+  .result-icon { font-size: 3.5rem; }
+
+  .result-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.6rem;
+    color: var(--text);
+  }
+
+  .result-score-ring {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: conic-gradient(var(--accent) 0%, var(--accent) var(--pct, 0%), var(--surface2) var(--pct, 0%));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow: var(--shadow-md);
+  }
+  .result-score-inner {
+    width: 108px;
+    height: 108px;
+    background: var(--surface);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .result-pct {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 2rem;
+    color: var(--text);
+    line-height: 1;
+  }
+  .result-pct-label {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.7rem;
+    color: var(--text2);
+    margin-top: 2px;
+  }
+
+  .result-stats {
+    display: flex;
+    gap: 12px;
+  }
+  .result-stat {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px 20px;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+  .result-stat .num {
+    font-size: 1.4rem;
+    font-weight: 700;
+    display: block;
+  }
+  .result-stat .lbl {
+    font-size: 0.72rem;
+    color: var(--text2);
+    letter-spacing: 0.04em;
+  }
+  .stat-correct .num { color: var(--green); }
+  .stat-wrong .num { color: var(--red); }
+
+  .result-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    max-width: 300px;
+  }
+
+  /* ── SCREEN VISIBILITY ── */
+  #main-screen { display: block; }
+  .screen-flex { display: flex; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════ MAIN SCREEN ═══ -->
+<div id="main-screen">
+  <header>
+    <div class="logo">
+      <div class="logo-dot"></div>
+      Vocabook
+    </div>
+    <div id="word-count-badge" class="word-count-badge">0 단어</div>
+  </header>
+
+  <div class="wrapper">
+    <!-- 단어 추가 -->
+    <div class="section-card">
+      <div class="section-title">✏️ 단어 추가</div>
+      <div class="input-row">
+        <input type="text" id="english-input" placeholder="영어 단어 입력..." autocomplete="off" autocorrect="off" spellcheck="false" />
+        <button class="btn btn-secondary" id="translate-btn">뜻 찾기</button>
+      </div>
+      <div id="translate-status" class="translate-status"></div>
+      <div class="input-row" style="margin-top:8px">
+        <input type="text" id="korean-input" placeholder="한글 뜻 (자동 완성 또는 직접 입력)" />
+        <button class="btn btn-primary" id="add-btn">추가</button>
+      </div>
+    </div>
+
+    <!-- 단어 목록 -->
+    <div class="section-card">
+      <div class="section-title">📚 등록된 단어 <span id="list-count" style="color:var(--accent)"></span></div>
+      <div id="word-list" class="word-list">
+        <div class="empty-state"><span>📖</span>아직 단어가 없어요.<br>위에서 첫 단어를 추가해보세요!</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 테스트 시작 버튼 -->
+  <div class="test-start-wrap">
+    <button class="btn btn-primary btn-start" id="start-test-btn">테스트 시작 →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ TEST SCREEN ═══ -->
+<div id="test-screen">
+  <div class="test-header">
+    <div class="test-progress-text" id="test-progress-text">1 / 10</div>
+    <div class="logo" style="position:absolute;left:50%;transform:translateX(-50%)">
+      <div class="logo-dot"></div>
+      테스트
+    </div>
+    <button class="btn btn-ghost" id="exit-test-btn">나가기 ✕</button>
+  </div>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progress-bar-fill" style="width:0%"></div>
+  </div>
+
+  <div class="test-body">
+    <div class="test-label">이 단어의 영어 표현은?</div>
+
+    <div class="clue-card">
+      <div class="clue-text" id="clue-text">—</div>
+    </div>
+
+    <div id="wrong-reveal" style="display:none"></div>
+
+    <div class="answer-area">
+      <input type="text" id="answer-input" placeholder="영어 단어를 입력하세요..."
+             autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
+      <button class="btn btn-primary btn-confirm" id="confirm-btn">확인 ↵</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ RESULT SCREEN ═══ -->
+<div id="result-screen">
+  <div class="result-icon" id="result-icon">🎉</div>
+  <div class="result-title" id="result-title">테스트 완료!</div>
+  <div class="result-score-ring" id="result-ring" style="--pct:0%">
+    <div class="result-score-inner">
+      <span class="result-pct" id="result-pct">0%</span>
+      <span class="result-pct-label">정답률</span>
+    </div>
+  </div>
+  <div class="result-stats">
+    <div class="result-stat stat-correct">
+      <span class="num" id="stat-correct">0</span>
+      <span class="lbl">✔ 정답</span>
+    </div>
+    <div class="result-stat stat-wrong">
+      <span class="num" id="stat-wrong">0</span>
+      <span class="lbl">✘ 오답</span>
+    </div>
+    <div class="result-stat">
+      <span class="num" id="stat-total">0</span>
+      <span class="lbl">총 문제</span>
+    </div>
+  </div>
+  <div class="result-actions">
+    <button class="btn btn-primary btn-start" id="retry-btn">다시 테스트</button>
+    <button class="btn btn-secondary btn-start" id="back-btn">단어장으로 돌아가기</button>
+  </div>
+</div>
+
+<!-- Feedback overlay -->
+<div class="feedback-overlay" id="feedback-overlay">
+  <div class="feedback-pill" id="feedback-pill"></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════
+let words = [];
+let testQueue = [];
+let testIndex = 0;
+let testCorrect = 0;
+let testWrong = 0;
+let waitingNext = false;
+
+const STORAGE_KEY = 'vocabook_words_v1';
+
+function save() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(words));
+}
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) words = JSON.parse(raw);
+  } catch { words = []; }
+}
+
+// ═══════════════════════════════════════════════
+//  DOM REFS
+// ═══════════════════════════════════════════════
+const engInput = document.getElementById('english-input');
+const korInput = document.getElementById('korean-input');
+const translateBtn = document.getElementById('translate-btn');
+const addBtn = document.getElementById('add-btn');
+const wordListEl = document.getElementById('word-list');
+const wordCountBadge = document.getElementById('word-count-badge');
+const listCount = document.getElementById('list-count');
+const startTestBtn = document.getElementById('start-test-btn');
+const translateStatus = document.getElementById('translate-status');
+
+const mainScreen = document.getElementById('main-screen');
+const testScreen = document.getElementById('test-screen');
+const resultScreen = document.getElementById('result-screen');
+
+const testProgressText = document.getElementById('test-progress-text');
+const progressBarFill = document.getElementById('progress-bar-fill');
+const clueText = document.getElementById('clue-text');
+const answerInput = document.getElementById('answer-input');
+const confirmBtn = document.getElementById('confirm-btn');
+const wrongReveal = document.getElementById('wrong-reveal');
+const exitTestBtn = document.getElementById('exit-test-btn');
+
+const feedbackOverlay = document.getElementById('feedback-overlay');
+const feedbackPill = document.getElementById('feedback-pill');
+const retryBtn = document.getElementById('retry-btn');
+const backBtn = document.getElementById('back-btn');
+
+// ═══════════════════════════════════════════════
+//  RENDER WORD LIST
+// ═══════════════════════════════════════════════
+function renderList() {
+  const count = words.length;
+  wordCountBadge.textContent = `${count} 단어`;
+  listCount.textContent = count ? `(${count})` : '';
+
+  if (!count) {
+    wordListEl.innerHTML = `<div class="empty-state"><span>📖</span>아직 단어가 없어요.<br>위에서 첫 단어를 추가해보세요!</div>`;
+    startTestBtn.disabled = true;
+    startTestBtn.style.opacity = '0.4';
+    return;
+  }
+
+  startTestBtn.disabled = false;
+  startTestBtn.style.opacity = '1';
+
+  // Sort by score desc, then by eng alphabetically
+  const sorted = [...words].sort((a, b) => b.score - a.score || a.eng.localeCompare(b.eng));
+
+  wordListEl.innerHTML = sorted.map(w => {
+    const sc = w.score;
+    const badgeClass = sc === 0 ? 'score-0' : sc <= 2 ? 'score-low' : sc <= 4 ? 'score-mid' : 'score-high';
+    return `
+      <div class="word-item" data-id="${w.id}">
+        <div class="word-score-badge ${badgeClass}">${sc}</div>
+        <div class="word-eng">${escHtml(w.eng)}</div>
+        <div class="word-sep">·</div>
+        <div class="word-kor">${escHtml(w.kor)}</div>
+        <button class="btn btn-ghost" onclick="deleteWord('${w.id}')" title="삭제">✕</button>
+      </div>
+    `;
+  }).join('');
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ═══════════════════════════════════════════════
+//  TRANSLATE (MyMemory API)
+// ═══════════════════════════════════════════════
+async function translate(word) {
+  translateStatus.className = 'translate-status loading';
+  translateStatus.textContent = '번역 중...';
+  translateBtn.disabled = true;
+
+  try {
+    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(word.trim())}&langpair=en|ko`;
+    const res = await fetch(url);
+    const data = await res.json();
+    if (data.responseStatus === 200 && data.responseData?.translatedText) {
+      let result = data.responseData.translatedText;
+      // Clean up common garbage
+      result = result.replace(/MYMEMORY WARNING.*$/i, '').trim();
+      if (result && result !== word) {
+        korInput.value = result;
+        translateStatus.className = 'translate-status';
+        translateStatus.textContent = `✓ "${result}" 로 자동 입력됐어요. 수정해도 됩니다.`;
+      } else {
+        translateStatus.className = 'translate-status error';
+        translateStatus.textContent = '뜻을 찾지 못했어요. 직접 입력해주세요.';
+      }
+    } else {
+      throw new Error('no result');
+    }
+  } catch {
+    translateStatus.className = 'translate-status error';
+    translateStatus.textContent = '번역 실패. 직접 뜻을 입력해주세요.';
+  } finally {
+    translateBtn.disabled = false;
+  }
+}
+
+translateBtn.addEventListener('click', () => {
+  const w = engInput.value.trim();
+  if (!w) { engInput.focus(); return; }
+  translate(w);
+});
+
+engInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    const w = engInput.value.trim();
+    if (w) translate(w);
+  }
+});
+
+// ═══════════════════════════════════════════════
+//  ADD / DELETE
+// ═══════════════════════════════════════════════
+addBtn.addEventListener('click', addWord);
+korInput.addEventListener('keydown', e => { if (e.key === 'Enter') addWord(); });
+
+function addWord() {
+  const eng = engInput.value.trim().toLowerCase();
+  const kor = korInput.value.trim();
+  if (!eng || !kor) {
+    if (!eng) { engInput.focus(); engInput.style.borderColor = 'var(--red)'; setTimeout(()=>engInput.style.borderColor='',1200); }
+    else { korInput.focus(); korInput.style.borderColor = 'var(--red)'; setTimeout(()=>korInput.style.borderColor='',1200); }
+    return;
+  }
+  if (words.some(w => w.eng === eng)) {
+    translateStatus.className = 'translate-status error';
+    translateStatus.textContent = `"${eng}" 는 이미 등록된 단어예요.`;
+    return;
+  }
+  words.unshift({ id: Date.now().toString(), eng, kor, score: 0, streak: 0 });
+  save();
+  renderList();
+  engInput.value = '';
+  korInput.value = '';
+  translateStatus.className = 'translate-status';
+  translateStatus.textContent = '';
+  engInput.focus();
+}
+
+function deleteWord(id) {
+  words = words.filter(w => w.id !== id);
+  save();
+  renderList();
+}
+
+// ═══════════════════════════════════════════════
+//  TEST LOGIC
+// ═══════════════════════════════════════════════
+startTestBtn.addEventListener('click', startTest);
+
+function startTest() {
+  if (!words.length) return;
+
+  // Build queue: sort by score desc, shuffle within same-score groups
+  const grouped = {};
+  words.forEach(w => {
+    if (!grouped[w.score]) grouped[w.score] = [];
+    grouped[w.score].push({...w}); // snapshot
+  });
+  testQueue = [];
+  Object.keys(grouped).sort((a,b)=>b-a).forEach(sc => {
+    const arr = grouped[sc];
+    for (let i = arr.length-1; i > 0; i--) {
+      const j = Math.floor(Math.random()*(i+1));
+      [arr[i],arr[j]] = [arr[j],arr[i]];
+    }
+    testQueue.push(...arr);
+  });
+
+  testIndex = 0;
+  testCorrect = 0;
+  testWrong = 0;
+  waitingNext = false;
+
+  mainScreen.style.display = 'none';
+  resultScreen.style.display = 'none';
+  testScreen.style.display = 'flex';
+  testScreen.style.flexDirection = 'column';
+
+  showQuestion();
+  setTimeout(() => answerInput.focus(), 100);
+}
+
+function showQuestion() {
+  const total = testQueue.length;
+  const current = testIndex + 1;
+  testProgressText.textContent = `${current} / ${total}`;
+  progressBarFill.style.width = `${((current-1)/total)*100}%`;
+
+  const word = testQueue[testIndex];
+  clueText.textContent = word.kor;
+  answerInput.value = '';
+  answerInput.style.borderColor = '';
+  wrongReveal.style.display = 'none';
+  wrongReveal.innerHTML = '';
+  waitingNext = false;
+  confirmBtn.textContent = '확인 ↵';
+
+  setTimeout(() => answerInput.focus(), 80);
+}
+
+confirmBtn.addEventListener('click', handleAnswer);
+answerInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    if (waitingNext) { nextQuestion(); }
+    else { handleAnswer(); }
+  }
+});
+
+function handleAnswer() {
+  if (waitingNext) { nextQuestion(); return; }
+
+  const userAns = answerInput.value.trim().toLowerCase();
+  if (!userAns) { answerInput.focus(); return; }
+
+  const word = testQueue[testIndex];
+  const correct = userAns === word.eng.toLowerCase();
+
+  // Update master words array
+  const master = words.find(w => w.id === word.id);
+  if (master) {
+    if (correct) {
+      master.streak = (master.streak || 0) + 1;
+      if (master.streak >= 2) {
+        master.score = Math.max(0, master.score - 1);
+        master.streak = 0;
+      }
+      testCorrect++;
+    } else {
+      master.score += 1;
+      master.streak = 0;
+      testWrong++;
+    }
+    save();
+  }
+
+  if (correct) {
+    answerInput.style.borderColor = 'var(--green)';
+    showFeedback(true);
+    waitingNext = true;
+    confirmBtn.textContent = '다음 →';
+    setTimeout(() => nextQuestion(), 900);
+  } else {
+    answerInput.style.borderColor = 'var(--red)';
+    showFeedback(false);
+    wrongReveal.innerHTML = `
+      <div class="wrong-answer-reveal">
+        <div class="label">정답</div>
+        <div class="answer">${escHtml(word.eng)}</div>
+      </div>`;
+    wrongReveal.style.display = 'block';
+    waitingNext = true;
+    confirmBtn.textContent = '다음 →';
+    answerInput.focus();
+  }
+}
+
+function nextQuestion() {
+  testIndex++;
+  if (testIndex >= testQueue.length) {
+    showResult();
+  } else {
+    showQuestion();
+  }
+}
+
+function showFeedback(correct) {
+  feedbackPill.className = `feedback-pill ${correct ? 'feedback-correct' : 'feedback-wrong'}`;
+  feedbackPill.textContent = correct ? '✓ 정답!' : '✗ 오답';
+  feedbackOverlay.classList.add('show');
+  setTimeout(() => feedbackOverlay.classList.remove('show'), 800);
+}
+
+// ═══════════════════════════════════════════════
+//  RESULT
+// ═══════════════════════════════════════════════
+function showResult() {
+  testScreen.style.display = 'none';
+  resultScreen.style.display = 'flex';
+  resultScreen.style.flexDirection = 'column';
+
+  const total = testQueue.length;
+  const pct = total ? Math.round((testCorrect / total) * 100) : 0;
+
+  document.getElementById('result-pct').textContent = `${pct}%`;
+  document.getElementById('stat-correct').textContent = testCorrect;
+  document.getElementById('stat-wrong').textContent = testWrong;
+  document.getElementById('stat-total').textContent = total;
+
+  const ring = document.getElementById('result-ring');
+  ring.style.setProperty('--pct', `${pct}%`);
+
+  const icon = document.getElementById('result-icon');
+  const title = document.getElementById('result-title');
+  if (pct === 100) { icon.textContent = '🏆'; title.textContent = '완벽해요!'; }
+  else if (pct >= 80) { icon.textContent = '🎉'; title.textContent = '훌륭해요!'; }
+  else if (pct >= 60) { icon.textContent = '💪'; title.textContent = '잘하고 있어요!'; }
+  else { icon.textContent = '📖'; title.textContent = '계속 연습해요!'; }
+
+  renderList(); // update scores in list
+}
+
+retryBtn.addEventListener('click', () => {
+  resultScreen.style.display = 'none';
+  startTest();
+});
+
+backBtn.addEventListener('click', () => {
+  resultScreen.style.display = 'none';
+  mainScreen.style.display = 'block';
+});
+
+exitTestBtn.addEventListener('click', () => {
+  testScreen.style.display = 'none';
+  mainScreen.style.display = 'block';
+  save();
+  renderList();
+});
+
+// ═══════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════
+load();
+renderList();
+engInput.focus();
+</script>
+</body>
+</html>
