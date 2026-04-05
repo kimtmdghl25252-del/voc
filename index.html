@@ -171,6 +171,9 @@
     .wwi-word { font-size: 20px; font-weight: 800; font-family: var(--mono); color: var(--error); margin-bottom: 2px; }
     .wwi-meaning { font-size: 14px; color: var(--text-dim); margin-bottom: 4px; }
     .wwi-example { font-size: 13px; color: var(--text-muted); line-height: 1.45; margin-top: 6px; }
+
+    /* 대소문자 방지 시각적 표시용 (강제 소문자) */
+    #in-word, .mode-a #test-input { text-transform: lowercase; }
   </style>
 </head>
 <body>
@@ -203,11 +206,11 @@
           <div class="card-title">✏️ 단어 등록</div>
           <div class="field">
             <label>영단어</label>
-            <input type="text" id="in-word" placeholder="예: apple" autocomplete="off" autocapitalize="none">
+            <input type="text" id="in-word" placeholder="예: apple (소문자만 입력됨)" autocomplete="off" autocapitalize="none">
           </div>
           <div class="field">
             <label>한글 뜻</label>
-            <input type="text" id="in-meaning" placeholder="예: 사과" autocomplete="off">
+            <input type="text" id="in-meaning" placeholder="예: 사과, 사과나무" autocomplete="off">
           </div>
           <button class="btn btn-primary" id="btn-add">+ 등록 (예문 자동 생성)</button>
         </div>
@@ -474,15 +477,17 @@ async function handleSearch() {
   btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
   
   try {
-    const sys = `You are a highly accurate English-Korean dictionary. Output ONLY a valid JSON object with keys "eng" and "kor". No other text.`;
-    const user = `Word: "${query}"
-Rule 1: If the Word is in Korean, "eng" must be the English translation, and "kor" MUST be exactly "${query}".
-Rule 2: If the Word is in English, "eng" MUST be exactly "${query}", and "kor" must be the Korean translation.
-Output JSON: {"eng": "...", "kor": "..."}`;
+    const sys = `You are a strict English-Korean dictionary. Always return a valid JSON object with exactly two keys: "eng" and "kor". No markdown, no extra text.`;
+    const user = `Input: "${query}"
+Instructions:
+1. If Input is an English word: "eng" MUST be exactly "${query}", and "kor" MUST be 2-3 common Korean meanings separated by commas (e.g., "가정교사, 개인 지도 교사").
+2. If Input is a Korean word: "kor" MUST be exactly "${query}", and "eng" MUST be the accurate English translation.
+Output JSON format: {"eng": "...", "kor": "..."}`;
     
     const result = await callGroqJSON(sys, user);
     
-    document.getElementById('in-word').value = result.eng || '';
+    // 받아온 영단어를 무조건 소문자로 변환하여 넣음
+    document.getElementById('in-word').value = (result.eng || '').toLowerCase();
     document.getElementById('in-meaning').value = result.kor || '';
     showToast('✨ 검색 완료!');
   } catch(e) {
@@ -493,10 +498,12 @@ Output JSON: {"eng": "...", "kor": "..."}`;
 }
 
 async function addWord() {
-  const eng = document.getElementById('in-word').value.trim();
+  // 저장할 때 무조건 영단어를 소문자로 변환
+  const eng = document.getElementById('in-word').value.trim().toLowerCase();
   const kor = document.getElementById('in-meaning').value.trim();
+  
   if (!eng || !kor) { showToast('⚠️ 영단어와 뜻을 확인해주세요.'); return; }
-  if (words.find(w => w.word.toLowerCase() === eng.toLowerCase())) { showToast(`"${eng}"는 이미 있습니다.`); return; }
+  if (words.find(w => w.word === eng)) { showToast(`"${eng}"는 이미 있습니다.`); return; }
 
   const btn = document.getElementById('btn-add');
   btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> 자동 예문 생성 중...';
@@ -574,14 +581,20 @@ function renderQuestion() {
 function checkAnswer() {
   if (testState.feedbackShown) { advanceTest(); return; }
   const input = document.getElementById('test-input');
-  const ans = input.value.trim();
+  
+  // A모드(영단어 맞추기)일 때는 입력값을 소문자로 변환하여 채점
+  let ans = input.value.trim();
+  if (testState.mode === 'A') {
+    ans = ans.toLowerCase();
+  }
+
   if (!ans) { showToast('⚠️ 답을 입력해주세요'); return; }
 
   const word = testState.queue[testState.index];
   let pass = false, partial = false;
 
   if (testState.mode === 'A') {
-    pass = ans.toLowerCase() === word.word.toLowerCase();
+    pass = ans === word.word; // 이미 둘 다 소문자이므로 === 로 비교 가능
   } else {
     const r = judgeKorean(ans, word.meaning);
     pass = r.pass; partial = r.partial;
@@ -640,6 +653,16 @@ function showResults() {
 document.addEventListener('DOMContentLoaded', () => {
   loadWords(); renderWordList();
   if (getApiKey()) document.getElementById('in-api-key').value = getApiKey();
+
+  // 강제 소문자 입력 (사용자가 대문자를 쳐도 화면에서 즉시 소문자로 변환됨)
+  document.getElementById('in-word').addEventListener('input', function() {
+    this.value = this.value.toLowerCase();
+  });
+  document.getElementById('test-input').addEventListener('input', function() {
+    if (testState.mode === 'A') {
+      this.value = this.value.toLowerCase();
+    }
+  });
 
   // Mobile Keyboard Layout Adjust
   if (window.visualViewport) { window.visualViewport.addEventListener('resize', () => { if (document.getElementById('test-shell').classList.contains('active')) { const b = document.getElementById('test-body'); if(b) b.scrollTop = b.scrollHeight; } }); }
