@@ -6,8 +6,8 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <title>WordMaster 📚</title>
-  <link rel="preconnect" href="[https://fonts.googleapis.com](https://fonts.googleapis.com)">
-  <link href="[https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap](https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap)" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #080c14;
@@ -391,11 +391,11 @@ async function callGroqJSON(systemPrompt, userPrompt) {
   const apiKey = getApiKey();
   if (!apiKey) throw new Error('설정에서 Groq API 키를 등록해주세요.');
   
-  const res = await fetch('[https://api.groq.com/openai/v1/chat/completions](https://api.groq.com/openai/v1/chat/completions)', {
+  const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
     body: JSON.stringify({
-      model: 'llama-3.1-8b-instant', // 최신 3.1 8B 모델 고정
+      model: 'llama-3.1-8b-instant', 
       messages: [ { role: 'system', content: systemPrompt }, { role: 'user', content: userPrompt } ],
       temperature: 0.1,
       response_format: { type: "json_object" }
@@ -474,7 +474,6 @@ async function handleSearch() {
   btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
   
   try {
-    // 환각 방지를 위해 룰을 극도로 강화한 프롬프트
     const sys = `You are a highly accurate English-Korean dictionary. Output ONLY a valid JSON object with keys "eng" and "kor". No other text.`;
     const user = `Word: "${query}"
 Rule 1: If the Word is in Korean, "eng" must be the English translation, and "kor" MUST be exactly "${query}".
@@ -503,7 +502,6 @@ async function addWord() {
   btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> 자동 예문 생성 중...';
 
   try {
-    // 예문 생성 시에도 엉뚱한 답변을 막기 위한 엄격한 지시
     const sys = `You generate examples. Return strictly a JSON object: {"example": "...", "blank": "..."}. Do not use Markdown.`;
     const user = `Target word: "${eng}" (Meaning: ${kor}). Create a short, natural English sentence using it, and a blank version where "${eng}" is replaced by exactly "____".`;
     
